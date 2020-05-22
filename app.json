@@ -1,6 +1,7 @@
 {
   "name": "GrandBankMobile",
   "displayName": "Grand Bank Mobile",
+  "serverUrl": "http://localhost:8080",
   "oauth": {
     "clientId": "NJDB3H7AFB2SEA2G",
     "clientSecret": "c340ba9b-0a87-48d4-b58a-254af4091952",

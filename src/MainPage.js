@@ -20,7 +20,9 @@ export class MainPage extends React.Component {
   screenOptions({ route }) {
     route.params = {
       ...route.params,
-      authorization: this.props.authorization
+      authorization: this.props.authorization,
+      user: this.props.user,
+      handlers: this.props.handlers
     };
 
     return {
@@ -34,12 +36,11 @@ export class MainPage extends React.Component {
 
   render() {
     const Tab = this.Tab;
-    const screenOptions = { authorization: this.props.authorization };
     return (
       <NavigationContainer>
         <Tab.Navigator screenOptions={this.screenOptions}>
           {navigatioSettings.map(item => (
-            <Tab.Screen name={item.name} component={item.component} />)
+            <Tab.Screen name={item.name} component={item.component} key={item.name} />)
           )}
         </Tab.Navigator>
       </NavigationContainer>

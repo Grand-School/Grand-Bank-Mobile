@@ -4,7 +4,7 @@ import { authorize } from 'react-native-app-auth';
 import {oauth as oauthSettings} from '../app.json';
 
 import {
-    Button, SafeAreaView, Alert, StyleSheet, Image, View, TouchableHighlight, Text
+    SafeAreaView, StyleSheet, Image, View, TouchableHighlight, Text
 } from 'react-native';
 
 export class LoginPage extends React.Component {
@@ -17,21 +17,20 @@ export class LoginPage extends React.Component {
         const that = this;
         authorize(oauthSettings)
             .then(result => {
-                const user = result.tokenAdditionalParameters.user;
-                that.props.onData({
-                    user,
+                const settings = {
                     token: result.accessToken,
                     expireOn: result.accessTokenExpirationDate,
                     refreshToken: result.refreshToken
-                });
+                };
+                that.props.onData(settings);
             });
     }
 
     render() {
         return (
-            <SafeAreaView>
-                <View style={loginStyle.center}>
-                    <Image source={require('../img/grand.png')} style={loginStyle.logo} />
+            <>
+                <View style={loginStyle.logoView}>
+                    <Image source={require('../img/grand.png')} />
                 </View>
                 <View>
                     <TouchableHighlight onPress={this.authorize} style={s.btnTouchAble}>
@@ -40,7 +39,7 @@ export class LoginPage extends React.Component {
                         </View>
                     </TouchableHighlight>
                 </View>
-            </SafeAreaView>
+            </>
         )
     }
 }
@@ -49,12 +48,9 @@ const bootstrapStyleSheet = new BootstrapStyleSheet({}, {});
 const s = bootstrapStyleSheet.create();
 
 const loginStyle = StyleSheet.create({
-    logo: {
-        top: '50%',
-        alignSelf: 'center'
-    },
-
-    center: {
-        height: '90%'
+    logoView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '92%'
     }
 });
