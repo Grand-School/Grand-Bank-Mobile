@@ -1,42 +1,48 @@
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { HomeScreen } from './screens/HomeScreen';
+import { SettingsScreen } from './screens/SettingsScreen';
 
-import { Text, View } from 'react-native';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+const navigatioSettings = [
+  { name: 'Главная', component: HomeScreen, icon: 'ios-home' },
+  { name: 'Настройки', component: SettingsScreen, icon: 'ios-settings' }
+];
 
-// function HomeScreen() {
-//   return (
-    // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    //   <Text>Home!</Text>
-    // </View>
-//   );
-// }
+export class MainPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.Tab = createBottomTabNavigator();
+    this.screenOptions = this.screenOptions.bind(this);
+  }
 
-// function SettingsScreen() {
-//   return (
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//       <Text>Settings!</Text>
-//     </View>
-//   );
-// }
+  screenOptions({ route }) {
+    route.params = {
+      ...route.params,
+      authorization: this.props.authorization
+    };
 
-// const Tab = createBottomTabNavigator();
+    return {
+      tabBarIcon: ({ size, color }) => {
+        const iconName = navigatioSettings
+            .filter(item => item.name === route.name)[0].icon;
+        return <Icon name={iconName} size={size} color={color} />
+      }
+    };
+  }
 
-// export default function App() {
-//   return (
-//     <NavigationContainer>
-//       <Tab.Navigator>
-//         <Tab.Screen name="Home" component={HomeScreen} />
-//         <Tab.Screen name="Settings" component={SettingsScreen} />
-//       </Tab.Navigator>
-//     </NavigationContainer>
-//   );
-// }
-
-export default function App() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
+  render() {
+    const Tab = this.Tab;
+    const screenOptions = { authorization: this.props.authorization };
+    return (
+      <NavigationContainer>
+        <Tab.Navigator screenOptions={this.screenOptions}>
+          {navigatioSettings.map(item => (
+            <Tab.Screen name={item.name} component={item.component} />)
+          )}
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
 }

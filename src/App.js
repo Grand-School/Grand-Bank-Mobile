@@ -1,6 +1,6 @@
 import React from 'react';
 import { LoginPage } from './LoginPage';
-import Pages from './MainPage';
+import { MainPage } from './MainPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,7 +11,8 @@ class App extends React.Component {
   }
 
   render() {
-      return this.state.authorization ? <Pages /> 
+      return this.state.authorization 
+          ? <MainPage authorization={this.state.authorization} /> 
           : <LoginPage onData={authorization => this.setState({ authorization })} />;
   }
 }
