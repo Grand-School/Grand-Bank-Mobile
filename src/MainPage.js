@@ -22,6 +22,7 @@ export class MainPage extends React.Component {
       ...route.params,
       authorization: this.props.authorization,
       user: this.props.user,
+      creditCardsInfo: this.props.creditCardsInfo,
       handlers: this.props.handlers
     };
 

@@ -3,7 +3,7 @@ import { serverUrl } from '../app.json';
 class RestTemplate {
     async get(url) {
         let token = await this.getToken();
-        return fetch(serverUrl + url, {
+        return fetch(this.getUrl(url), {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -17,6 +17,10 @@ class RestTemplate {
 
     setAuthorization(authorization) {
         this.authorization = authorization;
+    }
+
+    getUrl(url) {
+        return serverUrl + url;
     }
 }
 

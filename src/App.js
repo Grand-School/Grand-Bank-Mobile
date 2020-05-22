@@ -45,10 +45,17 @@ export default class App extends React.Component {
 
   login(authorization) {
     const that = this;
-    this.setState({ authorization });
+    this.setState({ authorization, loading: true });
     RestTemplate.setAuthorization(authorization);
-    RestTemplate.get('/rest/users/profile')
-      .then(user => that.setState({ user, loading: false }))
+
+    let loadUserPromise = RestTemplate.get('/rest/users/profile')
+      .then(user => that.setState({ user }));
+    
+    let loadCreditCardsPromise = RestTemplate.get('/rest/api/creditcard')
+      .then(creditCardsInfo => that.setState({ creditCardsInfo }));
+
+    Promise.all([ loadUserPromise, loadCreditCardsPromise ])
+      .then(() => that.setState({ loading: false }));
   }
 
   render() {
@@ -57,7 +64,8 @@ export default class App extends React.Component {
     }
 
     return this.state.authorization && this.state.user
-        ? <MainPage authorization={this.state.authorization} user={this.state.user} handlers={this.handlers} /> 
+        ? <MainPage authorization={this.state.authorization} user={this.state.user} 
+                    creditCardsInfo={this.state.creditCardsInfo} handlers={this.handlers} /> 
         : <LoginPage onData={this.onLogin} />;
   }
 }
