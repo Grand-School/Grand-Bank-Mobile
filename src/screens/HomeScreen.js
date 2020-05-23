@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ImageBackground, Image, Button } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ImageBackground, Image, Alert } from 'react-native';
 import RestTemplate from '../RestTemplate';
 const getUserCard = (user, creditCardsInfo) => creditCardsInfo.filter(info => info.codeName === user.cardType)[0];
 
@@ -24,25 +24,50 @@ export class HomeScreen extends React.Component {
     }
 }
 
-function UserCard(props) {
-    const number = getSepparattedCardNumber(props.user.creditCard);
-    const user = props.user.name + ' ' + props.user.surname;
-    return (
-        <ImageBackground style={ccs.creditCard} imageStyle={ccs.backgroundImage}
-            source={{uri: RestTemplate.getUrl('/resources/img/cards/classical.png')}}>
-            <Text style={ccs.cardTitle}>{props.card.name}</Text>
-            <Image style={ccs.cardLogo} source={require('../../img/grand.png')} resizeMode='contain' />
-            <Text style={ccs.cardNumber}>{number}</Text>
-            <View style={ccs.leftColumn}>
-                <Text style={ccs.label}>Владелец</Text>
-                <Text style={ccs.ownerName}>{user}</Text>
-            </View>
-            <View style={ccs.rightColumn}>
-                <Text style={ccs.label}>Баланс</Text>
-                <Text style={ccs.balance}>{props.user.balance}</Text>
-            </View>
-        </ImageBackground>
-    );
+class UserCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { backgroundImageUrl: null };
+        this.loadSettings();
+    }
+
+    loadSettings() {
+        const that = this;
+        const styleUrl = RestTemplate.getUrl(this.props.card.style);
+        fetch(styleUrl)
+            .then(response => response.json())
+            .then(settings => {
+                that.setState({
+                    backgroundImageUrl: settings.frontImage
+                });
+            })
+            .catch(error => Alert.alert('Ошибка загрузки настройки стилей карты', error.message));
+    }
+
+    render() {
+        if (!this.state.backgroundImageUrl) {
+            return <></>;
+        }
+
+        const number = getSepparattedCardNumber(this.props.user.creditCard);
+        const user = this.props.user.name + ' ' + this.props.user.surname;
+        return (
+            <ImageBackground style={ccs.creditCard} imageStyle={ccs.backgroundImage}
+                source={{uri: RestTemplate.getUrl(this.state.backgroundImageUrl)}}>
+                <Text style={ccs.cardTitle}>{this.props.card.name}</Text>
+                <Image style={ccs.cardLogo} source={require('../../img/grand.png')} resizeMode='contain' />
+                <Text style={ccs.cardNumber}>{number}</Text>
+                <View style={ccs.leftColumn}>
+                    <Text style={ccs.label}>Владелец</Text>
+                    <Text style={ccs.ownerName}>{user}</Text>
+                </View>
+                <View style={ccs.rightColumn}>
+                    <Text style={ccs.label}>Баланс</Text>
+                    <Text style={ccs.balance}>{this.props.user.balance}</Text>
+                </View>
+            </ImageBackground>
+        );
+    }
 }
 
 function getSepparattedCardNumber(number) {

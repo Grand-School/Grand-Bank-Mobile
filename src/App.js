@@ -2,7 +2,7 @@ import React from 'react';
 import { LoginPage } from './LoginPage';
 import { MainPage } from './MainPage';
 import { LoadingScreen } from './LoadingScreen';
-import { Alert } from 'react-native';
+import { Alert, AlertButton } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestTemplate from './RestTemplate';
 
@@ -23,8 +23,19 @@ export default class App extends React.Component {
   }
 
   logout() {
-    AsyncStorage.removeItem(AUTHENTICATION_ITEM_NAME);
-    this.setState({ authorization: null });
+    Alert.alert('Выход', 'Вы уверены, что хотте выйти?', [
+      {
+        text: 'Выйти',
+        onPress: () => {
+          AsyncStorage.removeItem(AUTHENTICATION_ITEM_NAME);
+          this.setState({ authorization: null });
+        }
+      },
+      {
+        text: 'Отменить',
+        style: 'cancel'
+      }
+    ])
   }
 
   onLogin(authorization) {
