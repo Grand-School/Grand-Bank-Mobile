@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text, SafeAreaView, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -39,6 +40,7 @@ export class MainPage extends React.Component {
     const Tab = this.Tab;
     return (
       <NavigationContainer>
+        <Header />
         <Tab.Navigator screenOptions={this.screenOptions}>
           {navigatioSettings.map(item => (
             <Tab.Screen name={item.name} component={item.component} key={item.name} />)
@@ -48,3 +50,24 @@ export class MainPage extends React.Component {
     );
   }
 }
+
+function Header() {
+  return (
+    <SafeAreaView>
+      <Text style={style.headerText}>Grand Bank Mobile</Text>
+    </SafeAreaView>
+  );
+}
+
+const style = StyleSheet.create({
+  header: {
+    height: '5%',
+  },
+
+  headerText: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '600',
+    paddingBottom: 15
+  }
+});
