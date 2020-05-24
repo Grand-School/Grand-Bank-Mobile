@@ -1,15 +1,15 @@
 {
   "name": "GrandBankMobile",
   "displayName": "Grand Bank Mobile",
-  "serverUrl": "http://localhost:8080",
+  "serverUrl": "http://192.168.2.184:8080",
   "oauth": {
-    "clientId": "NJDB3H7AFB2SEA2G",
-    "clientSecret": "c340ba9b-0a87-48d4-b58a-254af4091952",
+    "clientId": "DOQUWMVJOMZXF3QX",
+    "clientSecret": "4c53d5b3-f667-41bb-8a11-bd2e805f7a61",
     "redirectUrl": "com.whatever.url.you.configured.in.uber.oauth://redirect",
     "scopes": ["user_info"],
     "serviceConfiguration": {
-      "authorizationEndpoint": "http://localhost:8080/oauth/authorize",
-      "tokenEndpoint": "http://localhost:8080/oauth/token"
+      "authorizationEndpoint": "http://192.168.2.184:8080/oauth/authorize",
+      "tokenEndpoint": "http://192.168.2.184:8080/oauth/token"
     }
   }
 }

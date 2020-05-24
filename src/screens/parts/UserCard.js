@@ -14,34 +14,40 @@ export class UserCard extends React.Component {
         const styleUrl = RestTemplate.getUrl(this.props.card.style);
         fetch(styleUrl)
             .then(response => response.json())
-            .then(settings => {
-                that.setState({
-                    backgroundImageUrl: settings.frontImage
-                });
-            })
+            .then(cardSettings => that.setState({ cardSettings }))
             .catch(error => Alert.alert('Ошибка загрузки настройки стилей карты', error.message));
     }
 
+    styles(name) {
+        const settings = this.state.cardSettings;
+        if (settings.styles !== undefined && settings.styles.native !== undefined) {
+            let stylesJSON = settings.styles.native[name];
+            console.log(stylesJSON);
+            return stylesJSON === undefined ? {} : stylesJSON;
+        }
+        return {};
+    }
+
     render() {
-        if (!this.state.backgroundImageUrl) {
+        if (!this.state.cardSettings) {
             return <></>;
         }
 
         const number = getSepparattedCardNumber(this.props.user.creditCard);
         const user = this.props.user.name + ' ' + this.props.user.surname;
         return (
-            <ImageBackground style={ccs.creditCard} imageStyle={ccs.backgroundImage}
-                source={{uri: RestTemplate.getUrl(this.state.backgroundImageUrl)}}>
-                <Text style={ccs.cardTitle}>{this.props.card.name}</Text>
-                <Image style={ccs.cardLogo} source={require('../../../img/grand.png')} resizeMode='contain' />
-                <Text style={ccs.cardNumber}>{number}</Text>
-                <View style={ccs.leftColumn}>
-                    <Text style={ccs.label}>Владелец</Text>
-                    <Text style={ccs.ownerName}>{user}</Text>
+            <ImageBackground style={[ccs.creditCard, this.styles('credit_card')]} imageStyle={ccs.backgroundImage}
+                source={{uri: RestTemplate.getUrl(this.state.cardSettings.frontImage)}}>
+                <Text style={[ccs.cardTitle, this.styles('card_type')]}>{this.props.card.name}</Text>
+                <Image style={[ccs.cardLogo, this.styles('card_logo')]} source={require('../../../img/grand.png')} resizeMode='contain' />
+                <Text style={[ccs.cardNumber, this.styles('card_number')]}>{number}</Text>
+                <View style={[ccs.leftColumn, this.styles('card_space-75')]}>
+                    <Text style={[ccs.label, this.styles('card_label'), this.styles('card_user')]}>Владелец</Text>
+                    <Text style={[ccs.ownerName, this.styles('card_info'), this.styles('card_user')]}>{user}</Text>
                 </View>
-                <View style={ccs.rightColumn}>
-                    <Text style={ccs.label}>Баланс</Text>
-                    <Text style={ccs.balance}>{this.props.user.balance}</Text>
+                <View style={[ccs.rightColumn, this.styles('card_space-25')]}>
+                    <Text style={[ccs.label, this.styles('card_label'), this.styles('card_label_balance')]}>Баланс</Text>
+                    <Text style={[ccs.balance, this.styles('card_info'), this.styles('card_balance')]}>{this.props.user.balance}</Text>
                 </View>
             </ImageBackground>
         );
