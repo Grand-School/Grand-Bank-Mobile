@@ -3,15 +3,16 @@ import { Text, View, Button, StyleSheet, SafeAreaView, TouchableHighlight } from
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
+import DataStorage from '../DataStorage';
 
 export class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.params = this.props.route.params;
   }
 
   render() {
-    let user = this.params.user;
+    let user = DataStorage.getByKey('user');
+    const handlers = DataStorage.getByKey('handlers');
 
     return (
       <SafeAreaView>
@@ -23,9 +24,12 @@ export class SettingsScreen extends React.Component {
               <Text style={style.sectionTitle}>Профиль</Text>
               
               <View style={style.buttonsList}>
-                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} firstItem={true} />
-                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} />
-                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
+                <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
+                    text='Выйти' colors={['#ee9617', '#fe5858']} firstItem={true} />
+                <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
+                    text='Выйти' colors={['#ee9617', '#fe5858']} />
+                <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
+                    text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
               </View>
             </View>
           </View>

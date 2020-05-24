@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { HomeScreen } from './screens/HomeScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
+import DataStorage from './DataStorage';
 
 const navigatioSettings = [
   { name: 'Главная', component: HomeScreen, icon: 'ios-home' },
@@ -16,17 +17,16 @@ export class MainPage extends React.Component {
     super(props);
     this.Tab = createBottomTabNavigator();
     this.screenOptions = this.screenOptions.bind(this);
-  }
 
-  screenOptions({ route }) {
-    route.params = {
-      ...route.params,
+    DataStorage.setData({
       authorization: this.props.authorization,
       user: this.props.user,
       creditCardsInfo: this.props.creditCardsInfo,
       handlers: this.props.handlers
-    };
+    });
+  }
 
+  screenOptions({ route, navigation }) {
     return {
       tabBarIcon: ({ size, color }) => {
         const iconName = navigatioSettings
