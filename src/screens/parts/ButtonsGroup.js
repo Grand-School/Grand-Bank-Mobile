@@ -50,7 +50,9 @@ const style = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         marginBottom: 5,
-        marginRight: 15
+        marginRight: 15,
+        width: 100,
+        alignItems: 'center'
     },
 
     buttonChildrenView: {
@@ -60,7 +62,6 @@ const style = StyleSheet.create({
 
     buttonText: {
         textAlign: 'center',
-        marginTop: 2,
-        maxWidth: 100
+        marginTop: 2
     }
 });
