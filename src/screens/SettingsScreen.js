@@ -23,6 +23,7 @@ export class SettingsScreen extends React.Component {
               <Text style={style.sectionTitle}>Профиль</Text>
               
               <View style={style.buttonsList}>
+                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} firstItem={true} />
                 <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} />
                 <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
               </View>
@@ -35,18 +36,42 @@ export class SettingsScreen extends React.Component {
 }
 
 function SettingsButton(props) {
-  let viewStyle = !props.lastItem ? { borderBottomColor: 'black', borderBottomWidth: 1 } : {};
+  let btnStyle = { ...bs.btn };
+  delete btnStyle.borderRadius;
+  delete btnStyle.borderStyle;
+  delete btnStyle.borderColor;
+  delete btnStyle.borderWidth;
+
+  let btnTouchable = { ...bs.btnTouchable };
+  delete btnTouchable.borderRadius;
+
+  let radiusStyle = {};
+  if (props.lastItem) {
+    radiusStyle.borderBottomLeftRadius = 5;
+    radiusStyle.borderBottomRightRadius = 5;
+  } else if (props.firstItem) {
+    radiusStyle.borderTopLeftRadius = 5;
+    radiusStyle.borderTopRightRadius = 5;
+  }
+
   return (
-    <TouchableHighlight onPress={props.onPress} style={[bs.btnTouchable]}>
-      <View style={[bs.btn, bs.btnLight, style.buttonView, viewStyle]}> 
-        <LinearGradient colors={props.colors} style={style.iconView}>
-          <Icon style={style.buttonIcon} name={props.icon} size={24} />
-        </LinearGradient>
-        <View style={style.textView}>
-          <Text style={style.buttonText}>{props.text}</Text>
+    <View>
+      <TouchableHighlight onPress={props.onPress} style={btnTouchable}>
+        <View style={[btnStyle, bs.btnLight, style.buttonView, radiusStyle]}> 
+          <LinearGradient colors={props.colors} style={style.iconView}>
+            <Icon style={style.buttonIcon} name={props.icon} size={24} />
+          </LinearGradient>
+          <View style={style.textView}>
+            <Text style={style.buttonText}>{props.text}</Text>
+          </View>
         </View>
-      </View>
-    </TouchableHighlight>
+      </TouchableHighlight>
+      {!props.lastItem && (
+        <View style={bs.btnLight}>
+          <View style={style.bottomButtonLine} />
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -65,7 +90,8 @@ const style = StyleSheet.create({
   },
 
   buttonsList: {
-    marginTop: 5
+    marginTop: 5,
+    borderRadius: 15
   },
 
   sectionTitle: {
@@ -99,5 +125,12 @@ const style = StyleSheet.create({
 
   textView: {
     justifyContent: 'center'
+  },
+
+  bottomButtonLine: {
+    borderBottomColor: '#6c757d',
+    borderBottomWidth: 1,
+    width: '93%',
+    alignSelf: 'center'
   }
 });
