@@ -1,7 +1,7 @@
 import React from 'react';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import { authorize } from 'react-native-app-auth';
-import {oauth as oauthSettings} from '../app.json';
+import { oauth as oauthSettings } from '../app.json';
 
 import {
     SafeAreaView, StyleSheet, Image, View, TouchableHighlight, Text
@@ -17,11 +17,7 @@ export class LoginPage extends React.Component {
         const that = this;
         authorize(oauthSettings)
             .then(result => {
-                const settings = {
-                    token: result.accessToken,
-                    expireOn: result.accessTokenExpirationDate,
-                    refreshToken: result.refreshToken
-                };
+                const settings = parseAuthorization(result);
                 that.props.onData(settings);
             });
     }
@@ -42,6 +38,14 @@ export class LoginPage extends React.Component {
             </>
         )
     }
+}
+
+export function parseAuthorization(authorization) {
+    return {
+        token: authorization.accessToken,
+        expireOn: authorization.accessTokenExpirationDate,
+        refreshToken: authorization.refreshToken
+    };
 }
 
 const bootstrapStyleSheet = new BootstrapStyleSheet({}, {});

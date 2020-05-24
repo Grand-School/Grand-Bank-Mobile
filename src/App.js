@@ -20,16 +20,15 @@ export default class App extends React.Component {
     };
 
     this.onLogin = this.onLogin.bind(this);
+    RestTemplate.setLogoutHandler(() => this.loggedOut());
+    RestTemplate.setRefreshHandler(data => this.onLogin(data));
   }
 
   logout() {
     Alert.alert('Выход', 'Вы уверены, что хотте выйти?', [
       {
         text: 'Выйти',
-        onPress: () => {
-          AsyncStorage.removeItem(AUTHENTICATION_ITEM_NAME);
-          this.setState({ authorization: null });
-        }
+        onPress: () => this.loggedOut()
       },
       {
         text: 'Отменить',
@@ -38,9 +37,14 @@ export default class App extends React.Component {
     ])
   }
 
+  loggedOut() {
+    AsyncStorage.removeItem(AUTHENTICATION_ITEM_NAME);
+    this.setState({ authorization: null });
+  }
+
   onLogin(authorization) {
-    AsyncStorage.setItem(AUTHENTICATION_ITEM_NAME, JSON.stringify(authorization))
-      .catch(error => Alert.alert('Ошибка сохранения авторизации'));
+    AsyncStorage.mergeItem(AUTHENTICATION_ITEM_NAME, JSON.stringify(authorization))
+      .catch(error => Alert.alert('Ошибка сохранения авторизации', error.message));
     this.login(authorization);
   }
 
