@@ -20,9 +20,9 @@ export class HomeScreen extends React.Component {
                 </View>
                 <View style={styles.buttonsGroup}>
                     <ButtonsGroup>
-                        <Button title='Перевод' icon='exchange' onPress={() => Alert.alert('translate')} />
-                        <Button title='Смена номера карты' icon='credit-card' onPress={() => Alert.alert('translate')} />
-                        <Button title='Активировать купон' icon='ticket' onPress={() => Alert.alert('translate')} />
+                        <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => Alert.alert('translate')} />
+                        <Button title='Смена номера карты' icon='credit-card' colors={['#9fa4c4', '#9e768f']} onPress={() => Alert.alert('translate')} />
+                        <Button title='Активировать купон' icon='ticket' colors={['#fce043','#fb7ba2']} onPress={() => Alert.alert('translate')} />
                     </ButtonsGroup>
                 </View>
             </SafeAreaView>

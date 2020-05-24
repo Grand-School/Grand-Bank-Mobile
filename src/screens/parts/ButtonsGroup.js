@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableHighlight, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from 'react-native-linear-gradient';
 
 export function ButtonsGroup(props) {
     return (
@@ -14,8 +15,10 @@ export function Button(props) {
     return (
         <View style={style.buttonParrentView}>
             <View style={style.buttonChildrenView}>
-                <TouchableHighlight onPress={props.onPress} style={style.buttonIcon}>
-                    <Icon name={props.icon} size={props.iconSize ? props.iconSize : 30} />
+                <TouchableHighlight onPress={props.onPress}>
+                    <LinearGradient colors={props.colors} style={style.buttonIcon}>
+                        <Icon name={props.icon} size={props.iconSize ? props.iconSize : 40} />
+                    </LinearGradient>
                 </TouchableHighlight>
                 <Text style={style.buttonText}>{props.title}</Text>
             </View>
@@ -30,14 +33,14 @@ const style = StyleSheet.create({
         borderTopRightRadius: 15,
         height: '100%',
         padding: 15,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center',
     },
 
     buttonIcon: {
         padding: 5,
-        backgroundColor: 'green',
-        width: 45,
-        height: 45,
+        width: 60,
+        height: 60,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center'

@@ -81,6 +81,8 @@ target 'GrandBankMobile' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   target 'GrandBankMobileTests' do
     inherit! :complete
     # Pods for testing

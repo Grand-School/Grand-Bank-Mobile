@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, Button, StyleSheet, SafeAreaView, TouchableHighlight } from 'react-native';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from 'react-native-linear-gradient';
 
 export class SettingsScreen extends React.Component {
   constructor(props) {
@@ -22,8 +23,8 @@ export class SettingsScreen extends React.Component {
               <Text style={style.sectionTitle}>Профиль</Text>
               
               <View style={style.buttonsList}>
-                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' />
-                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' lastItem={true} />
+                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} />
+                <SettingsButton onPress={this.params.handlers.onLogout} icon='sign-out' text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
               </View>
             </View>
           </View>
@@ -37,10 +38,10 @@ function SettingsButton(props) {
   let viewStyle = !props.lastItem ? { borderBottomColor: 'black', borderBottomWidth: 1 } : {};
   return (
     <TouchableHighlight onPress={props.onPress} style={[bs.btnTouchable]}>
-      <View style={[bs.btn, bs.btnLight, style.buttonView, viewStyle]}>
-        <View style={style.iconView}>
+      <View style={[bs.btn, bs.btnLight, style.buttonView, viewStyle]}> 
+        <LinearGradient colors={props.colors} style={style.iconView}>
           <Icon style={style.buttonIcon} name={props.icon} size={24} />
-        </View>
+        </LinearGradient>
         <View style={style.textView}>
           <Text style={style.buttonText}>{props.text}</Text>
         </View>
