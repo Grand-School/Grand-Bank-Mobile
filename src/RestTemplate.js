@@ -5,14 +5,31 @@ import { Alert } from 'react-native';
 import { parseAuthorization } from './LoginPage';
 
 class RestTemplate {
-    async get(url) {
+    async get(url, body) {
+        return await this.fetch(url, 'GET', body);
+    }
+
+    async post(url, body) {
+        return await this.fetch(url, 'POST', body);
+    }
+
+    async fetch(url, method, body = null) {
         let requestInfo;
         let token = await this.getToken();
-        return fetch(this.getUrl(url), {
+
+        const settings = {
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
-            }
-        })
+            },
+            method
+        };
+
+        if (body !== null) {
+            settings.body = JSON.stringify(body);
+        }
+
+        return fetch(this.getUrl(url), settings)
             .then(response => {
                 requestInfo = { status: response.status, isOk: response.ok };
                 return response.json();
@@ -21,7 +38,7 @@ class RestTemplate {
                 if (!requestInfo.ok && requestInfo.status === 401) {
                     this.logoutHandler();
                 }
-                return data;
+                return { data, requestInfo };
             });
     }
 

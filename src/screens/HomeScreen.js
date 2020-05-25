@@ -1,22 +1,37 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Alert, Text } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { UserCard } from './parts/UserCard';
 import { ButtonsGroup, Button } from './parts/ButtonsGroup';
-import DataStorage from '../DataStorage';
-const getUserCard = (user, creditCardsInfo) => creditCardsInfo.filter(info => info.codeName === user.cardType)[0];
+import { ChangeCardNumberPage } from './parts/ChangeCardNumberPage';
 
-export function HomeScreen() {
-    let user = DataStorage.getByKey('user');
-    let cardInfo = getUserCard(user, DataStorage.getByKey('creditCardsInfo'));
+export class HomeScreen extends React.Component {
+    constructor(props) {
+        super(props);
+        this.Stack = createStackNavigator();
+    }
+
+    render() {
+        const Stack = this.Stack;
+        return (
+            <Stack.Navigator>
+                <Stack.Screen name='Главная' component={MainPage} />
+                <Stack.Screen name='Смена номера карты' component={ChangeCardNumberPage} />
+            </Stack.Navigator>
+        );
+    }
+}
+
+function MainPage({ navigation }) {
     return (
         <SafeAreaView>
             <View style={styles.card}>
-                <UserCard user={user} card={cardInfo} />
+                <UserCard />
             </View>
             <View style={styles.buttonsGroup}>
                 <ButtonsGroup>
                     <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => Alert.alert('translate')} />
-                    <Button title='Смена номера карты' icon='credit-card' colors={['#9fa4c4', '#9e768f']} onPress={() => Alert.alert('translate')} />
+                    <Button title='Смена номера карты' icon='credit-card' colors={['#9fa4c4', '#9e768f']} onPress={() => navigation.navigate('Смена номера карты')} />
                     <Button title='Активировать купон' icon='ticket' colors={['#fce043','#fb7ba2']} onPress={() => Alert.alert('translate')} />
                 </ButtonsGroup>
             </View>

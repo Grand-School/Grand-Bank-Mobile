@@ -5,6 +5,7 @@ import { LoadingScreen } from './LoadingScreen';
 import { Alert, AlertButton } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestTemplate from './RestTemplate';
+import DataStorage from './DataStorage';
 
 const AUTHENTICATION_ITEM_NAME = 'authentication';
 
@@ -16,10 +17,13 @@ export default class App extends React.Component {
     this.tryLogin();
 
     this.handlers = {
-      onLogout: this.logout.bind(this)
+      onLogout: this.logout.bind(this),
+      updateUserProfile: this.updateUserProfile.bind(this)
     };
 
     this.onLogin = this.onLogin.bind(this);
+    this.updateUserProfile = this.updateUserProfile.bind(this);
+
     RestTemplate.setLogoutHandler(() => this.loggedOut());
     RestTemplate.setRefreshHandler(data => this.onLogin(data));
   }
@@ -63,14 +67,24 @@ export default class App extends React.Component {
     this.setState({ authorization, loading: true });
     RestTemplate.setAuthorization(authorization);
 
-    let loadUserPromise = RestTemplate.get('/rest/users/profile')
-      .then(user => that.setState({ user }));
+    let loadUserPromise = this.updateUserProfile();
     
     let loadCreditCardsPromise = RestTemplate.get('/rest/api/creditcard')
-      .then(creditCardsInfo => that.setState({ creditCardsInfo }));
+      .then(({ data: creditCardsInfo }) => that.setState({ creditCardsInfo }))
+      .catch(error => Alert.alert('Ошибка загрузки настроек карт', error.message));
 
     Promise.all([ loadUserPromise, loadCreditCardsPromise ])
       .then(() => that.setState({ loading: false }));
+  }
+
+  updateUserProfile() {
+    const that = this;
+    return RestTemplate.get('/rest/users/profile')
+      .then(({ data: user }) => {
+        DataStorage.put('user', user);
+        that.setState({ user })
+      })
+      .catch(error => Alert.alert('Ошибка загрузки профиля', error.message));
   }
 
   render() {
