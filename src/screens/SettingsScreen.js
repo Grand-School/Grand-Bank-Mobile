@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet, SafeAreaView, TouchableHighlight, Alert } from 'react-native';
+import { Text, View, Button, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
@@ -64,7 +64,7 @@ function SettingsButton(props) {
 
   return (
     <View>
-      <TouchableHighlight onPress={props.onPress} style={btnTouchable}>
+      <TouchableOpacity onPress={props.onPress} style={btnTouchable}>
         <View style={[btnStyle, bs.btnLight, style.buttonView, radiusStyle]}> 
           <LinearGradient colors={props.colors} style={style.iconView}>
             <Icon style={style.buttonIcon} name={props.icon} size={24} />
@@ -73,7 +73,7 @@ function SettingsButton(props) {
             <Text style={style.buttonText}>{props.text}</Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
       {!props.lastItem && (
         <View style={bs.btnLight}>
           <View style={style.bottomButtonLine} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableHighlight, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -16,11 +16,11 @@ export function Button(props) {
     return (
         <View style={style.buttonParrentView}>
             <View style={style.buttonChildrenView}>
-                <TouchableHighlight onPress={props.onPress}>
+                <TouchableOpacity onPress={props.onPress}>
                     <LinearGradient colors={props.colors} style={style.buttonIcon}>
                         <IconElement name={props.icon} size={props.iconSize ? props.iconSize : 40} />
                     </LinearGradient>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 <Text style={style.buttonText}>{props.title}</Text>
             </View>
         </View>
