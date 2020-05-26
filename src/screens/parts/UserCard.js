@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, SafeAreaView, ImageBackground, Image, Alert } f
 import RestTemplate from '../../RestTemplate';
 import DataStorage from '../../DataStorage';
 import { getUserCard } from '../../Utils';
+import CustomFontProvider, { useCustomFont } from 'react-native-custom-fonts';
 
 export class UserCard extends React.Component {
     constructor(props) {
@@ -47,10 +48,31 @@ export class UserCard extends React.Component {
     styles(name) {
         const settings = this.state.cardSettings;
         if (settings.styles !== undefined && settings.styles.native !== undefined) {
-            let stylesJSON = settings.styles.native[name];
-            return stylesJSON === undefined ? {} : stylesJSON;
+            let styles = settings.styles.native[name];
+            return styles === undefined ? {} : styles;
         }
         return {};
+    }
+
+    getFontFaces() {
+        const fontsArray = this.state.cardSettings.loadFonts
+            .filter(font => font.native !== undefined)
+            .map(font => ({
+                uri: RestTemplate.getUrl(font.native.uri),
+                fontFamily: font.native.fontFamily,
+                fontWeight: font.native.fontWeight,
+                fontStyle: font.native.fontStyle,
+                color: font.native.color
+            }));
+
+        const result = {};
+        fontsArray.forEach(font => result[font.fontFamily] = font);
+        return result;
+    }
+
+    getCustomFont(className) {
+        let settings = this.state.cardSettings.setFonts[className];
+        return settings ? settings.fontFamily : '';
     }
 
     render() {
@@ -60,30 +82,50 @@ export class UserCard extends React.Component {
 
         const number = getSepparattedCardNumber(this.state.user.creditCard);
         const user = this.state.user.name + ' ' + this.state.user.surname;
+        const fontsMap = {
+            'card_type': this.getCustomFont('card_type'),
+            'card_number': this.getCustomFont('card_number'),
+            'card_label_owner': this.getCustomFont('card_label_owner'),
+            'card_user': this.getCustomFont('card_user'),
+            'card_label_balance': this.getCustomFont('card_label_balance'),
+            'card_balance': this.getCustomFont('card_balance')
+        };
+
+        console.log(fontsMap);
+
         return (
             <ImageBackground style={[ccs.creditCard, this.styles('credit_card')]} imageStyle={ccs.backgroundImage}
-                source={{uri: RestTemplate.getUrl(this.state.cardSettings.frontImage)}}>
-                <Text style={[ccs.cardTitle, this.styles('card_type')]}>{this.state.card.name}</Text>
-                <Image style={[ccs.cardLogo, this.styles('card_logo')]} source={require('../../../img/grand.png')} resizeMode='contain' />
+                    source={{uri: RestTemplate.getUrl(this.state.cardSettings.frontImage)}}>
+                <CustomFontProvider fontFaces={this.getFontFaces()}>
+                    <CardTextComponent fontName={fontsMap['card_type']} style={[ccs.cardTitle, this.styles('card_type')]}>{this.state.card.name}</CardTextComponent>
+                    <Image style={[ccs.cardLogo, this.styles('card_logo')]} source={require('../../../img/grand.png')} resizeMode='contain' />
 
-                {this.props.children ? (
-                    <View style={[ccs.cardNumber, this.styles('card_number')]}>{this.props.children}</View>
-                ) : (
-                    <Text style={[ccs.cardNumber, this.styles('card_number')]}>{number}</Text>
-                )}
+                    {this.props.children ? (
+                        <View style={[ccs.cardNumber, this.styles('card_number')]}>{this.props.children}</View>
+                    ) : (
+                        <CardTextComponent fontName={fontsMap['card_number']} style={[ccs.cardNumber, this.styles('card_number')]}>{number}</CardTextComponent>
+                    )}
 
-                <View style={[ccs.leftColumn, this.styles('card_space-75')]}>
-                    <Text style={[ccs.label, this.styles('card_label'), this.styles('card_user')]}>Владелец</Text>
-                    <Text style={[ccs.ownerName, this.styles('card_info'), this.styles('card_user')]}>{user}</Text>
-                </View>
-                <View style={[ccs.rightColumn, this.styles('card_space-25')]}>
-                    <Text style={[ccs.label, this.styles('card_label'), this.styles('card_label_balance')]}>Баланс</Text>
-                    <Text style={[ccs.balance, this.styles('card_info'), this.styles('card_balance')]}>{this.state.user.balance}</Text>
-                </View>
+                    <View style={[ccs.leftColumn, this.styles('card_space-75')]}>
+                        <CardTextComponent fontName={fontsMap['card_label_owner']} style={[ccs.label, this.styles('card_label'), this.styles('card_label_owner')]}>Владелец</CardTextComponent>
+                        <CardTextComponent fontName={fontsMap['card_user']} style={[ccs.ownerName, this.styles('card_info'), this.styles('card_user')]}>{user}</CardTextComponent>
+                    </View>
+                    <View style={[ccs.rightColumn, this.styles('card_space-25')]}>
+                        <CardTextComponent fontName={fontsMap['card_label_balance']} style={[ccs.label, this.styles('card_label'), this.styles('card_label_balance')]}>Баланс</CardTextComponent>
+                        <CardTextComponent fontName={fontsMap['card_balance']} style={[ccs.balance, this.styles('card_info'), this.styles('card_balance')]}>{this.state.user.balance}</CardTextComponent>
+                    </View>
+                </CustomFontProvider>
             </ImageBackground>
         );
     }
 }
+
+const CardTextComponent = props => {
+    const fontStyles = props.fontName === '' ? {} : useCustomFont(props.fontName).style;
+    const styles = [fontStyles, ...props.style]
+    return <Text style={styles}>{props.children}</Text>;
+  };
+  
 
 function getSepparattedCardNumber(number) {
     let result = '';
@@ -112,7 +154,12 @@ const ccs = StyleSheet.create({
         height: 40,
         fontSize: 25,
         color: 'white',
-        padding: 10
+        padding: 10,
+
+        fontFamily: "Lacquer",
+        fontWeight: "400",
+        fontStyle: "normal",
+        color: "white"
     },
 
     cardLogo: {
