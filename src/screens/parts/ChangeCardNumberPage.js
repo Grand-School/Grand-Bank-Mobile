@@ -78,19 +78,19 @@ export class ChangeCardNumberPage extends React.Component {
                     <UserCard ref={userCard => this.userCardElement = userCard}>
                         <View style={styles.inputParrent}>
                             <TextInput onChangeText={e => this.changeText(e, 0)} ref={input => this.inputs[0] = input}
-                                    value={this.state.numberInputs[0]} style={styles.input} />
+                                    value={this.state.numberInputs[0]} style={styles.input} keyboardType='number-pad' />
                             
                             <TextInput onChangeText={e => this.changeText(e, 1)} ref={input => this.inputs[1] = input}
-                                    value={this.state.numberInputs[1]} style={[styles.input, { left: 110 }]} />
+                                    value={this.state.numberInputs[1]} style={[styles.input, { left: 110 }]} keyboardType='number-pad' />
 
                             <TextInput onChangeText={e => this.changeText(e, 2)} ref={input => this.inputs[2] = input}
-                                    value={this.state.numberInputs[2]} style={[styles.input, { left: 220 }]} />
+                                    value={this.state.numberInputs[2]} style={[styles.input, { left: 220 }]} keyboardType='number-pad' />
                         </View>
                     </UserCard>
                 </View>
                 {this.state.price && (
                     <View style={styles.afterCardParrent}>
-                        <Text>Стоимость смены номера карты: <Text style={styles.textBold}>{this.state.price} грандиков</Text>.</Text>
+                        <Text style={styles.priceText}>Стоимость смены номера карты: <Text style={styles.textBold}>{this.state.price} грандиков</Text>.</Text>
                         <Button title='Сменить номер' disabled={buttonDisabled} onPress={this.updateNumberButtonHandler} />
                     </View>
                 )}
@@ -133,5 +133,9 @@ const styles = StyleSheet.create({
 
     textBold: {
         fontWeight: '600'
+    },
+
+    priceText: {
+        marginBottom: 5
     }
 });
