@@ -45,8 +45,8 @@ export class ChangeCardTarif extends React.Component {
                 .filter(card => card.ableToBuy);
 
         return (
-            <ScrollView style={{ padding: 15, marginBottom: 15 }}>
-                <View style={{ alignItems: 'center' }}>
+            <ScrollView style={{ padding: 15 }}>
+                <View style={{ alignItems: 'center', paddingBottom: 15 }}>
                     {creditCards.map(card => <CardInfo key={card.codeName} card={card} 
                             buyAble={card.codeName !== user.cardType} onBuy={() => this.buyCard(card.codeName)} />)}
                 </View>

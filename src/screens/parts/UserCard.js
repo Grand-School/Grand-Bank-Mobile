@@ -17,7 +17,8 @@ export class UserCard extends React.Component {
         let card = props.cardTarif ? findCard(props.cardTarif, creditCardInfo) : getUserCard(user, creditCardInfo);
         this.state = {
             cardSettings: null,
-            card, user
+            card, user,
+            fontLoading: true
         };
 
         let cardSetting = DataStorage.getByKey('cardStyles')[card.codeName];
@@ -31,6 +32,8 @@ export class UserCard extends React.Component {
         if (!props.cardTarif) {
             DataStorage.onDataChange('user', this.onUserUpdate, this.id);
         }
+
+        this.fontDownloadingEnd = this.fontDownloadingEnd.bind(this);
     }
 
     componentWillUnmount() {
@@ -85,16 +88,34 @@ export class UserCard extends React.Component {
     }
 
     getCustomFont(className) {
+        if (this.state.fontLoading) {
+            return '';
+        }
+
         let settings = this.state.cardSettings.setFonts[className];
         return settings ? settings.fontFamily : '';
     }
 
-    render() {
-        if (!this.state.cardSettings) {
-            return <></>;
+    fontDownloadingEnd() {
+        if (!this.state.fontLoading) {
+            return;
         }
 
-        const number = getSepparattedCardNumber(this.state.user.creditCard);
+        this.setState({
+            fontLoading: false
+        });
+    }
+
+    render() {
+        if (!this.state.cardSettings) {
+            return (
+                <View style={[ccs.creditCard, { backgroundColor: 'black', justifyContent: 'center', alignItems: 'center' }]}>
+                    <Text style={{ color: 'white', fontSize: 24, fontWeight: '600' }}>Загрузка...</Text>
+                </View>
+            );
+        }
+
+        const number = getSeparatedCardNumber(this.state.user.creditCard);
         const user = this.state.user.name + ' ' + this.state.user.surname;
         const fontsMap = {
             'card_type': this.getCustomFont('card_type'),
@@ -108,7 +129,7 @@ export class UserCard extends React.Component {
         return (
             <ImageBackground style={[ccs.creditCard, this.styles('credit_card')]} imageStyle={ccs.backgroundImage}
                     source={{uri: RestTemplate.getUrl(this.state.cardSettings.frontImage)}}>
-                <CustomFontProvider fontFaces={this.getFontFaces()}>
+                <CustomFontProvider fontFaces={this.getFontFaces()} onDownloadDidEnd={this.fontDownloadingEnd}>
                     <CardTextComponent fontName={fontsMap['card_type']} style={[ccs.cardTitle, this.styles('card_type')]}>{this.state.card.name}</CardTextComponent>
                     <Image style={[ccs.cardLogo, this.styles('card_logo')]} source={require('../../../img/grand.png')} resizeMode='contain' />
 
@@ -139,7 +160,7 @@ const CardTextComponent = props => {
   };
   
 
-function getSepparattedCardNumber(number) {
+function getSeparatedCardNumber(number) {
     let result = '';
     for (let i = 0; i < number.length; i++) {
         result += i % 4 === 0 ? ' ' + number[i] : number[i];
