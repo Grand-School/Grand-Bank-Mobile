@@ -22,7 +22,8 @@ export class MainPage extends React.Component {
       authorization: this.props.authorization,
       user: this.props.user,
       creditCardsInfo: this.props.creditCardsInfo,
-      handlers: this.props.handlers
+      handlers: this.props.handlers,
+      cardStyles: {}
     });
   }
 
@@ -43,8 +44,8 @@ export class MainPage extends React.Component {
         <Header />
         <Tab.Navigator screenOptions={this.screenOptions}>
           {navigatioSettings.map(item => (
-            <Tab.Screen name={item.name} component={item.component} key={item.name} />)
-          )}
+            <Tab.Screen name={item.name} component={item.component} key={item.name} />
+          ))}
         </Tab.Navigator>
       </NavigationContainer>
     );

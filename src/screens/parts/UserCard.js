@@ -2,28 +2,39 @@ import React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ImageBackground, Image, Alert } from 'react-native';
 import RestTemplate from '../../RestTemplate';
 import DataStorage from '../../DataStorage';
-import { getUserCard } from '../../Utils';
+import { getUserCard, findCard } from '../../Utils';
 import CustomFontProvider, { useCustomFont } from 'react-native-custom-fonts';
+
+let userCardCounter = 0;
 
 export class UserCard extends React.Component {
     constructor(props) {
         super(props);
         let user = DataStorage.getByKey('user');
         let creditCardInfo = DataStorage.getByKey('creditCardsInfo');
+        this.id = ++userCardCounter;
 
+        let card = props.cardTarif ? findCard(props.cardTarif, creditCardInfo) : getUserCard(user, creditCardInfo);
         this.state = {
             cardSettings: null,
-            card: getUserCard(user, creditCardInfo),
-            user
+            card, user
         };
-        this.loadSettings();
+
+        let cardSetting = DataStorage.getByKey('cardStyles')[card.codeName];
+        if (cardSetting === undefined) {
+            this.loadSettings();
+        } else {
+            this.state.cardSettings = cardSetting;
+        }
 
         this.onUserUpdate = this.onUserUpdate.bind(this);
-        DataStorage.onDataChange('user', this.onUserUpdate);
+        if (!props.cardTarif) {
+            DataStorage.onDataChange('user', this.onUserUpdate, this.id);
+        }
     }
 
     componentWillUnmount() {
-        DataStorage.removeOnDataChange('user', this.onUserUpdate);
+        DataStorage.removeOnDataChange('user', this.onUserUpdate, this.id);
     }
 
     onUserUpdate(user) {
@@ -41,7 +52,10 @@ export class UserCard extends React.Component {
         const styleUrl = RestTemplate.getUrl(this.state.card.style);
         fetch(styleUrl)
             .then(response => response.json())
-            .then(cardSettings => that.setState({ cardSettings }))
+            .then(cardSettings => {
+                DataStorage.getByKey('cardStyles')[that.state.card.codeName] = cardSettings;
+                that.setState({ cardSettings })
+            })
             .catch(error => Alert.alert('Ошибка загрузки настройки стилей карты', error.message));
     }
 

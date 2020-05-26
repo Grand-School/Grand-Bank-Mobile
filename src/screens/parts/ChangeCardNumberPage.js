@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import { UserCard } from './UserCard';
 import DataStorage from '../../DataStorage';
 import RestTemplate from '../../RestTemplate';
-import { parseErrorResponse } from '../../Utils';
+import { parseErrorResponse, updateProfileAndGoBack } from '../../Utils';
 
 const STORAGE_PRICE_KEY = 'updateCardNumberPrice';
 
@@ -59,8 +59,7 @@ export class ChangeCardNumberPage extends React.Component {
                 .then(({ data, requestInfo }) => {
                     Alert.alert(requestInfo.isOk ? 'Успех!' : 'Неуспех', requestInfo.isOk ? null : parseErrorResponse(data));
                     if (requestInfo.isOk) {
-                        DataStorage.getByKey('handlers').updateUserProfile()
-                            .then(() => that.props.navigation.navigate('Главная'));
+                        updateProfileAndGoBack(that.props.navigation);
                     }
                 });
         };

@@ -12,12 +12,13 @@ export function ButtonsGroup(props) {
 }
 
 export function Button(props) {
+    const IconElement = props.iconElement ? props.iconElement : Icon;
     return (
         <View style={style.buttonParrentView}>
             <View style={style.buttonChildrenView}>
                 <TouchableHighlight onPress={props.onPress}>
                     <LinearGradient colors={props.colors} style={style.buttonIcon}>
-                        <Icon name={props.icon} size={props.iconSize ? props.iconSize : 40} />
+                        <IconElement name={props.icon} size={props.iconSize ? props.iconSize : 40} />
                     </LinearGradient>
                 </TouchableHighlight>
                 <Text style={style.buttonText}>{props.title}</Text>
@@ -33,8 +34,9 @@ const style = StyleSheet.create({
         borderTopRightRadius: 15,
         height: '100%',
         padding: 15,
+        flexWrap: 'wrap', 
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
 
     buttonIcon: {
@@ -49,7 +51,7 @@ const style = StyleSheet.create({
     buttonParrentView: {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        marginBottom: 5,
+        marginBottom: 15,
         marginRight: 15,
         width: 100,
         alignItems: 'center'

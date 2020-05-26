@@ -1,9 +1,18 @@
-const getUserCard = (user, creditCardsInfo) => creditCardsInfo.filter(info => info.codeName === user.cardType)[0];
+import DataStorage from './DataStorage';
+
+const getUserCard = (user, creditCardsInfo) => findCard(user.cardType, creditCardsInfo);
+
+const findCard = (codeName, creditCardsInfo) => creditCardsInfo.filter(info => info.codeName === codeName)[0];
 
 function parseErrorResponse() {
 
 }
 
+function updateProfileAndGoBack(navigation) {
+    DataStorage.getByKey('handlers').updateUserProfile()
+        .then(() => navigation.navigate('Главная'));
+}
+
 module.exports = {
-    getUserCard, parseErrorResponse
+    getUserCard, parseErrorResponse, findCard, updateProfileAndGoBack
 };

@@ -1,5 +1,3 @@
-import { call } from "react-native-reanimated";
-
 class DataStorage {
     constructor() {
         this.data = {};
@@ -29,13 +27,13 @@ class DataStorage {
             .forEach(item => item.callback(value));
     }
 
-    onDataChange(key, callback) {
-        this.onDataChangeCollection.push({ key, callback });
+    onDataChange(key, callback, callbackKey) {
+        this.onDataChangeCollection.push({ key, callback, callbackKey });
     }
 
-    removeOnDataChange(key, callback) {
+    removeOnDataChange(key, callback, callbackKey) {
         this.onDataChangeCollection = this.onDataChangeCollection
-            .filter(item => item.key !== key && item.callback !== callback);
+            .filter(item => item.key !== key && callbackKey ? item.callbackKey !== callbackKey : item.callback !== callback);
     }
 }
 
