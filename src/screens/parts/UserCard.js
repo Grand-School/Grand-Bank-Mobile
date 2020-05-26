@@ -91,8 +91,6 @@ export class UserCard extends React.Component {
             'card_balance': this.getCustomFont('card_balance')
         };
 
-        console.log(fontsMap);
-
         return (
             <ImageBackground style={[ccs.creditCard, this.styles('credit_card')]} imageStyle={ccs.backgroundImage}
                     source={{uri: RestTemplate.getUrl(this.state.cardSettings.frontImage)}}>

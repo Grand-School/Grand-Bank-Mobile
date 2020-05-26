@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet, SafeAreaView, TouchableHighlight } from 'react-native';
+import { Text, View, Button, StyleSheet, SafeAreaView, TouchableHighlight, Alert } from 'react-native';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,6 +8,12 @@ import DataStorage from '../DataStorage';
 export class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.updateUserProfile = this.updateUserProfile.bind(this);
+  }
+
+  updateUserProfile() {
+    DataStorage.getByKey('handlers').updateUserProfile()
+      .then(() => Alert.alert('Успех!', 'Вы успешно обновили профиль!'));
   }
 
   render() {
@@ -24,10 +30,8 @@ export class SettingsScreen extends React.Component {
               <Text style={style.sectionTitle}>Профиль</Text>
               
               <View style={style.buttonsList}>
-                <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
-                    text='Выйти' colors={['#ee9617', '#fe5858']} firstItem={true} />
-                <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
-                    text='Выйти' colors={['#ee9617', '#fe5858']} />
+                <SettingsButton onPress={this.updateUserProfile} icon='refresh' 
+                    text='Обновить профиль' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
                 <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
                     text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
               </View>
