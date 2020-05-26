@@ -4,7 +4,7 @@ import DataStorage from '../../DataStorage';
 import { UserCard } from './UserCard';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RestTemplate from '../../RestTemplate';
-import { parseErrorResponse, updateProfileAndGoBack } from '../../Utils';
+import { parseErrorResponse, updateProfileAndGoBack, findCard } from '../../Utils';
 
 export class ChangeCardTarif extends React.Component {
     constructor(props) {
@@ -19,6 +19,19 @@ export class ChangeCardTarif extends React.Component {
     }
 
     buyCard(cardType) {
+        let newCard = findCard(cardType);
+        let oldCard = findCard(this.state.user.cardType);
+        if (newCard.price <= oldCard.price) {
+            Alert.alert('Вы уверены?', 'Вы уверены, что хотите купить карту, со стоимостью меньшей предыдущей?', [
+                { text: 'Нет', style: 'cancel' },
+                { text: 'Да', onPress: () => this.proccessBuy(cardType) }
+            ]);
+        } else {
+            this.proccessBuy(cardType);
+        }
+    }
+
+    proccessBuy(cardType) {
         const that = this;
         Alert.prompt('Введите пин-код', 'Для смены тарифа, введите пин-код', pinCode => {
             RestTemplate.post(`/rest/profile/card/${cardType}?pinCode=${pinCode}`)

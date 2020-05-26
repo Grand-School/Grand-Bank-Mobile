@@ -1,8 +1,8 @@
 import DataStorage from './DataStorage';
 
-const getUserCard = (user, creditCardsInfo) => findCard(user.cardType, creditCardsInfo);
+const getUserCard = user => findCard(user.cardType);
 
-const findCard = (codeName, creditCardsInfo) => creditCardsInfo.filter(info => info.codeName === codeName)[0];
+const findCard = codeName => DataStorage.getByKey('creditCardsInfo').filter(info => info.codeName === codeName)[0];
 
 function parseErrorResponse() {
 

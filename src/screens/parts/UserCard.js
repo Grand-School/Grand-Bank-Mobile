@@ -11,10 +11,9 @@ export class UserCard extends React.Component {
     constructor(props) {
         super(props);
         let user = DataStorage.getByKey('user');
-        let creditCardInfo = DataStorage.getByKey('creditCardsInfo');
         this.id = ++userCardCounter;
 
-        let card = props.cardTarif ? findCard(props.cardTarif, creditCardInfo) : getUserCard(user, creditCardInfo);
+        let card = props.cardTarif ? findCard(props.cardTarif) : getUserCard(user);
         this.state = {
             cardSettings: null,
             card, user,
@@ -41,10 +40,9 @@ export class UserCard extends React.Component {
     }
 
     onUserUpdate(user) {
-        let creditCardInfo = DataStorage.getByKey('creditCardsInfo');
         this.setState({
             cardSettings: null,
-            card: getUserCard(user, creditCardInfo),
+            card: getUserCard(user),
             user
         });
         this.loadSettings();
