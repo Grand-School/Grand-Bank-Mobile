@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Button, Alert } from 'react-native';
 import DataStorage from '../../DataStorage';
-import { UserCard } from './UserCard';
+import { UserCard } from '../../elements/UserCard';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RestTemplate from '../../RestTemplate';
 import { parseErrorResponse, updateProfileAndGoBack, findCard } from '../../Utils';
 
-export class ChangeCardTarif extends React.Component {
+export class ChangeCardTarifPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

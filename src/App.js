@@ -1,7 +1,7 @@
 import React from 'react';
-import { LoginPage } from './LoginPage';
-import { MainPage } from './MainPage';
-import { LoadingScreen } from './LoadingScreen';
+import { LoginPage } from './pages/LoginPage';
+import { MainPage } from './pages/MainPage';
+import { LoadingPage } from './pages/LoadingPage';
 import { Alert, AlertButton } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestTemplate from './RestTemplate';
@@ -89,7 +89,7 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <LoadingScreen />
+      return <LoadingPage />
     }
 
     return this.state.authorization && this.state.user

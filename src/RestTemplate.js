@@ -2,7 +2,7 @@ import { serverUrl } from '../app.json';
 import { refresh } from 'react-native-app-auth';
 import { oauth as oauthSettings } from '../app.json';
 import { Alert } from 'react-native';
-import { parseAuthorization } from './LoginPage';
+import { parseAuthorization } from './pages/LoginPage';
 
 class RestTemplate {
     async get(url, body) {

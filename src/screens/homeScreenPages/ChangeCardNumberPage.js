@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
-import { UserCard } from './UserCard';
+import { UserCard } from '../../elements/UserCard';
 import DataStorage from '../../DataStorage';
 import RestTemplate from '../../RestTemplate';
 import { parseErrorResponse, updateProfileAndGoBack } from '../../Utils';
@@ -20,7 +20,7 @@ export class ChangeCardNumberPage extends React.Component {
             this.state.price = DataStorage.getByKey(STORAGE_PRICE_KEY);
         } else {
             const that = this;
-            RestTemplate.get('/rest/profile/updateCardNumber/price')
+            RestTemplate.get('/rest/api/updateCardNumber/price')
                 .then(({ data: price }) => {
                     that.setState({ price });
                     DataStorage.put(STORAGE_PRICE_KEY, price);

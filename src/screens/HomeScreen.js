@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, SafeAreaView, Alert, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { UserCard } from './parts/UserCard';
-import { ButtonsGroup, Button } from './parts/ButtonsGroup';
-import { ChangeCardNumberPage } from './parts/ChangeCardNumberPage'; 
-import { ChangeCardTarif } from './parts/ChangeCardTarif';
+import { UserCard } from '../elements/UserCard';
+import { ButtonsGroup, Button } from '../elements/ButtonsGroup';
+import { ChangeCardNumberPage } from './homeScreenPages/ChangeCardNumberPage'; 
+import { ChangeCardTarifPage } from './homeScreenPages/ChangeCardTarifPage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export class HomeScreen extends React.Component {
@@ -19,7 +19,7 @@ export class HomeScreen extends React.Component {
             <Stack.Navigator>
                 <Stack.Screen name='Главная' component={MainPage} />
                 <Stack.Screen name='Смена номера карты' component={ChangeCardNumberPage} />
-                <Stack.Screen name='Смена тарифа карты' component={ChangeCardTarif} />
+                <Stack.Screen name='Смена тарифа карты' component={ChangeCardTarifPage} />
             </Stack.Navigator>
         );
     }

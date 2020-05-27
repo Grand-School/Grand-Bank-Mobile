@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ImageBackground, Image, Alert } from 'react-native';
-import RestTemplate from '../../RestTemplate';
-import DataStorage from '../../DataStorage';
-import { getUserCard, findCard } from '../../Utils';
+import RestTemplate from '../RestTemplate';
+import DataStorage from '../DataStorage';
+import { getUserCard, findCard } from '../Utils';
 import CustomFontProvider, { useCustomFont } from 'react-native-custom-fonts';
 
 let userCardCounter = 0;
@@ -129,7 +129,7 @@ export class UserCard extends React.Component {
                     source={{uri: RestTemplate.getUrl(this.state.cardSettings.frontImage)}}>
                 <CustomFontProvider fontFaces={this.getFontFaces()} onDownloadDidEnd={this.fontDownloadingEnd}>
                     <CardTextComponent fontName={fontsMap['card_type']} style={[ccs.cardTitle, this.styles('card_type')]}>{this.state.card.name}</CardTextComponent>
-                    <Image style={[ccs.cardLogo, this.styles('card_logo')]} source={require('../../../img/grand.png')} resizeMode='contain' />
+                    <Image style={[ccs.cardLogo, this.styles('card_logo')]} source={require('../../img/grand.png')} resizeMode='contain' />
 
                     {this.props.children ? (
                         <View style={[ccs.cardNumber, this.styles('card_number')]}>{this.props.children}</View>
@@ -185,12 +185,7 @@ const ccs = StyleSheet.create({
         height: 40,
         fontSize: 25,
         color: 'white',
-        padding: 10,
-
-        fontFamily: "Lacquer",
-        fontWeight: "400",
-        fontStyle: "normal",
-        color: "white"
+        padding: 10
     },
 
     cardLogo: {

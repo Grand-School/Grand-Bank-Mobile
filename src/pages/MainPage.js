@@ -3,9 +3,9 @@ import { Text, SafeAreaView, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { HomeScreen } from './screens/HomeScreen';
-import { SettingsScreen } from './screens/SettingsScreen';
-import DataStorage from './DataStorage';
+import { HomeScreen } from './../screens/HomeScreen';
+import { SettingsScreen } from './../screens/SettingsScreen';
+import DataStorage from './../DataStorage';
 
 const navigatioSettings = [
   { name: 'Главная', component: HomeScreen, icon: 'ios-home' },

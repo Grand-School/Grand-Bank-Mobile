@@ -1,7 +1,7 @@
 import React from 'react';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import { authorize } from 'react-native-app-auth';
-import { oauth as oauthSettings } from '../app.json';
+import { oauth as oauthSettings } from '../../app.json';
 
 import {
     SafeAreaView, StyleSheet, Image, View, TouchableHighlight, Text
@@ -26,7 +26,7 @@ export class LoginPage extends React.Component {
         return (
             <>
                 <View style={loginStyle.logoView}>
-                    <Image source={require('../img/grand.png')} />
+                    <Image source={require('../../img/grand.png')} />
                 </View>
                 <View>
                     <TouchableHighlight onPress={this.authorize} style={s.btnTouchAble}>
