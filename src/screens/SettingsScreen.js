@@ -4,6 +4,7 @@ import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import DataStorage from '../DataStorage';
+import { userRoleAsString } from '../Utils';
 
 export class SettingsScreen extends React.Component {
   constructor(props) {
@@ -23,19 +24,15 @@ export class SettingsScreen extends React.Component {
     return (
       <SafeAreaView>
         <View style={{ padding: 10 }}>
-          <Text style={style.userName}>{user.name} {user.surname}</Text>
+          <UserInfo user={user} />
 
           <View style={style.actionsList}>
-            <View>
-              <Text style={style.sectionTitle}>Профиль</Text>
-              
-              <View style={style.buttonsList}>
-                <SettingsButton onPress={this.updateUserProfile} icon='refresh' 
-                    text='Обновить профиль' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
-                <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
-                    text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
-              </View>
-            </View>
+            <ActionsList title='Профиль'>
+              <SettingsButton onPress={this.updateUserProfile} icon='refresh' 
+                  text='Обновить профиль' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
+              <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
+                  text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
+            </ActionsList>
           </View>
         </View>
       </SafeAreaView>
@@ -81,6 +78,30 @@ function SettingsButton(props) {
       )}
     </View>
   );
+}
+
+const UserInfo = props => {
+  return (
+    <View>
+      <Text style={style.userName}>{props.user.name} {props.user.surname}</Text>
+      <Text>Логин: <Text style={style.bold}>{props.user.username}</Text></Text>
+      <Text>Класс: <Text style={style.bold}>{props.user.class}</Text></Text>
+      <Text>Зарплата: <Text style={style.bold}>{props.user.salary} грандиков</Text></Text>
+      <Text>Роль: <Text style={style.bold}>{userRoleAsString(props.user.role)}</Text></Text>
+    </View>
+  );
+}
+
+const ActionsList = props => {
+  return (
+    <View>
+      <Text style={style.sectionTitle}>{props.title}</Text>
+      
+      <View style={style.buttonsList}>
+        {props.children}
+      </View>
+    </View>
+  )
 }
 
 const bootstrapStyleSheet = new BootstrapStyleSheet({}, {});
@@ -140,5 +161,13 @@ const style = StyleSheet.create({
     borderBottomWidth: 1,
     width: '93%',
     alignSelf: 'center'
+  },
+
+  bold: {
+    fontWeight: '600'
+  },
+
+  userInfo: {
+    fontSize: 18
   }
 });
