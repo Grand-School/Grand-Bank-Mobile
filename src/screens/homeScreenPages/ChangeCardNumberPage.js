@@ -4,6 +4,7 @@ import { UserCard } from '../../elements/UserCard';
 import DataStorage from '../../DataStorage';
 import RestTemplate from '../../RestTemplate';
 import { parseErrorResponse, updateProfileAndGoBack } from '../../Utils';
+import { PinCodeModal } from '../../elements/PinCodeModal';
 
 const STORAGE_PRICE_KEY = 'updateCardNumberPrice';
 
@@ -13,7 +14,8 @@ export class ChangeCardNumberPage extends React.Component {
         this.inputs = [];
         this.state = {
             numberInputs: ['', '', ''],
-            price: null
+            price: null,
+            askPinCode: false
         };
 
         if (DataStorage.includes(STORAGE_PRICE_KEY)) {
@@ -29,6 +31,7 @@ export class ChangeCardNumberPage extends React.Component {
 
         this.changeText = this.changeText.bind(this);
         this.updateNumberButtonHandler = this.updateNumberButtonHandler.bind(this);
+        this.onPinCode = this.onPinCode.bind(this);
     }
 
     changeText(text, inputIndex) {
@@ -50,20 +53,22 @@ export class ChangeCardNumberPage extends React.Component {
     }
 
     updateNumberButtonHandler() {
+        this.setState({ askPinCode: true });
+    }
+
+    onPinCode(pinCode) {
         const newCardNumber = this.state.numberInputs.join('');
         const that = this;
-        const buyCardCallback = pinCode => {
-            RestTemplate.post('/rest/profile/updateCardNumber', {
-                newCardNumber, pinCode
-            })
-                .then(({ data, requestInfo }) => {
-                    Alert.alert(requestInfo.isOk ? 'Успех!' : 'Неуспех', requestInfo.isOk ? null : parseErrorResponse(data));
-                    if (requestInfo.isOk) {
-                        updateProfileAndGoBack(that.props.navigation);
-                    }
-                });
-        };
-        Alert.prompt('Введите пин-код', 'Для смены номер, введите пин-код', buyCardCallback);
+        RestTemplate.post('/rest/profile/updateCardNumber', {
+            newCardNumber, pinCode
+        })
+            .then(({ data, requestInfo }) => {
+                if (requestInfo.isOk) {
+                    that.setState({ askPinCode: false });
+                    updateProfileAndGoBack(that.props.navigation);
+                }
+                // Alert.alert(requestInfo.isOk ? 'Успех!' : 'Неуспех', requestInfo.isOk ? null : parseErrorResponse(data));
+            });
     }
 
     render() {
@@ -94,6 +99,7 @@ export class ChangeCardNumberPage extends React.Component {
                         <Button title='Сменить номер' disabled={buttonDisabled} onPress={this.updateNumberButtonHandler} />
                     </View>
                 )}
+                <PinCodeModal isVisible={this.state.askPinCode} onPinCode={this.onPinCode} onCloseAsk={() => this.setState({ askPinCode: false })} />
             </View>
         );
     }

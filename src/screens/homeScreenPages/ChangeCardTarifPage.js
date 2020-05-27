@@ -5,16 +5,20 @@ import { UserCard } from '../../elements/UserCard';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RestTemplate from '../../RestTemplate';
 import { parseErrorResponse, updateProfileAndGoBack, findCard } from '../../Utils';
+import { PinCodeModal } from '../../elements/PinCodeModal';
 
 export class ChangeCardTarifPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: DataStorage.getByKey('user')
+            user: DataStorage.getByKey('user'),
+            askPinCode: false
         }
 
         this.buyCard = this.buyCard.bind(this);
         this.updateUser = this.updateUser.bind(this);
+        
+        this.pinCodeCallback = () => null;
         DataStorage.onDataChange('user', this.updateUser);
     }
 
@@ -33,15 +37,16 @@ export class ChangeCardTarifPage extends React.Component {
 
     proccessBuy(cardType) {
         const that = this;
-        Alert.prompt('Введите пин-код', 'Для смены тарифа, введите пин-код', pinCode => {
+        this.pinCodeCallback = pinCode => {
             RestTemplate.post(`/rest/profile/card/${cardType}?pinCode=${pinCode}`)
                 .then(({ requestInfo }) => {
-                    Alert.alert(requestInfo.isOk ? 'Успех!' : 'Ошибка!', requestInfo.isOk ? null : parseErrorResponse(requestInfo));
                     if (requestInfo.isOk) {
+                        that.setState({ askPinCode: false });
                         updateProfileAndGoBack(that.props.navigation);
                     }
                 });
-        });
+        };
+        this.setState({ askPinCode: true });
     }
 
     updateUser(user) {
@@ -63,6 +68,8 @@ export class ChangeCardTarifPage extends React.Component {
                     {creditCards.map(card => <CardInfo key={card.codeName} card={card} 
                             buyAble={card.codeName !== user.cardType} onBuy={() => this.buyCard(card.codeName)} />)}
                 </View>
+
+                <PinCodeModal isVisible={this.state.askPinCode} onPinCode={this.pinCodeCallback} onCloseAsk={() => this.setState({ askPinCode: false })} />
             </ScrollView>
         );
     }    
