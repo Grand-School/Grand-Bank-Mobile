@@ -5,8 +5,11 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export function ButtonsGroup(props) {
     return (
-        <View style={style.buttonsGroup}>
-            {props.children}
+        <View style={style.bittonsGroupParrent}>
+            <View style={style.buttonGroupButton}></View>
+            <View style={style.buttonsGroup}>
+                {props.children}
+            </View>
         </View>
     );
 }
@@ -28,15 +31,28 @@ export function Button(props) {
 }
 
 const style = StyleSheet.create({
-    buttonsGroup: {
+    bittonsGroupParrent: {
         backgroundColor: '#d0d9d9',
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
-        height: '100%',
+    },
+
+    buttonsGroup: {
         padding: 15,
+        paddingTop: 0,
         flexWrap: 'wrap', 
         flexDirection: 'row',
         justifyContent: 'center'
+    },
+
+    buttonGroupButton: {
+        backgroundColor: 'white',
+        height: 5,
+        width: '40%',
+        alignSelf: 'center',
+        marginTop: 15,
+        marginBottom: 15,
+        borderRadius: 15
     },
 
     buttonIcon: {

@@ -4,7 +4,7 @@ import { authorize } from 'react-native-app-auth';
 import { oauth as oauthSettings } from '../../app.json';
 
 import {
-    SafeAreaView, StyleSheet, Image, View, TouchableHighlight, Text
+    SafeAreaView, StyleSheet, Image, View, TouchableOpacity, Text
 } from 'react-native';
 
 export class LoginPage extends React.Component {
@@ -29,11 +29,11 @@ export class LoginPage extends React.Component {
                     <Image source={require('../../img/grand.png')} />
                 </View>
                 <View>
-                    <TouchableHighlight onPress={this.authorize} style={s.btnTouchAble}>
+                    <TouchableOpacity onPress={this.authorize} style={s.btnTouchAble}>
                         <View style={[s.btn, s.btnPrimary]}>
                             <Text style={[s.btnText, s.btnTextPrimary]}>Войти</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
             </>
         )
