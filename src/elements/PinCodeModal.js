@@ -92,7 +92,7 @@ class PinCodeButton extends React.Component {
 
 const style = StyleSheet.create({
     pinCodeView: {
-        height: 500,
+        height: '60%',
         backgroundColor: 'rgb(237, 237, 237)',
         padding: 30
     },
@@ -108,7 +108,7 @@ const style = StyleSheet.create({
         marginBottom: 15,
         borderColor: 'rgb(213, 213, 213)',
         borderWidth: 1,
-        height: 100,
+        height: '20%',
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'
@@ -119,12 +119,12 @@ const style = StyleSheet.create({
     },
 
     button: {
-        width: 60,
-        height: 60,
+        width: '20%',
+        height: '15%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: 15,
+        marginRight: 15,
         marginTop: 7,
         marginBottom: 7
     },
@@ -136,6 +136,11 @@ const style = StyleSheet.create({
 
     buttonsGroup: {
         flexWrap: 'wrap', 
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        width: '100%',
+        paddingBottom: 30
     }
 });
