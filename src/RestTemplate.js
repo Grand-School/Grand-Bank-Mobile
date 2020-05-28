@@ -32,7 +32,14 @@ class RestTemplate {
         return fetch(this.getUrl(url), settings)
             .then(response => {
                 requestInfo = { status: response.status, isOk: response.ok };
-                return response.json();
+                return response.text();
+            })
+            .then(response => {
+                try {
+                    return JSON.parse(response);
+                } catch (e) {
+                    return '';
+                }
             })
             .then(data => {
                 if (!requestInfo.ok && requestInfo.status === 401) {

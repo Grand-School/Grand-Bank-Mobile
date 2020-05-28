@@ -5,6 +5,7 @@ import { UserCard } from '../elements/UserCard';
 import { ButtonsGroup, Button } from '../elements/ButtonsGroup';
 import { ChangeCardNumberPage } from './homeScreenPages/ChangeCardNumberPage'; 
 import { ChangeCardTarifPage } from './homeScreenPages/ChangeCardTarifPage';
+import { TranslatePage } from './homeScreenPages/TranslatePage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Modal from 'react-native-modal';
@@ -20,6 +21,7 @@ export class HomeScreen extends React.Component {
         return (
             <Stack.Navigator>
                 <Stack.Screen name='Главная' component={MainPage} />
+                <Stack.Screen name='Перевод' component={TranslatePage} />
                 <Stack.Screen name='Смена номера карты' component={ChangeCardNumberPage} />
                 <Stack.Screen name='Смена тарифа карты' component={ChangeCardTarifPage} />
             </Stack.Navigator>
@@ -67,10 +69,10 @@ class MainPage extends React.Component {
                 <View>
                     <Modal isVisible={this.state.modalVisible} onSwipeComplete={this.closeModal} swipeDirection={['down']} style={{ justifyContent: 'flex-end', margin: 0 }}>
                         <ButtonsGroup>
-                            <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => Alert.alert('translate')} />
-                            <Button title='Смена тарифа карты' icon='credit-card' colors={['#fce043','#fb7ba2']} onPress={() => this.openScreen('Смена тарифа карты')} />
+                            <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => this.openScreen('Перевод')} />
+                            <Button title='Смена тарифа карты' icon='credit-card' colors={['#fce043', '#fb7ba2']} onPress={() => this.openScreen('Смена тарифа карты')} />
                             <Button title='Смена номера карты' icon='numeric' colors={['#9fa4c4', '#9e768f']} onPress={() => this.openScreen('Смена номера карты')} iconElement={MaterialCommunityIcons} />
-                            <Button title='Активировать купон' icon='ticket' colors={['#fce043','#fb7ba2']} onPress={() => Alert.alert('translate')} />
+                            <Button title='Активировать купон' icon='ticket' colors={['#cdedfd', '#ffec82', '#ffcfd2']} onPress={() => Alert.alert('translate')} />
                         </ButtonsGroup>
                     </Modal>
                 </View>

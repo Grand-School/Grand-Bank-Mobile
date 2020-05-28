@@ -5,6 +5,7 @@ import DataStorage from '../../DataStorage';
 import RestTemplate from '../../RestTemplate';
 import { parseErrorResponse, updateProfileAndGoBack } from '../../Utils';
 import { PinCodeModal } from '../../elements/PinCodeModal';
+import { CardInput } from '../../elements/CardInput';
 
 const STORAGE_PRICE_KEY = 'updateCardNumberPrice';
 
@@ -13,7 +14,7 @@ export class ChangeCardNumberPage extends React.Component {
         super(props);
         this.inputs = [];
         this.state = {
-            numberInputs: ['', '', ''],
+            typedInput: '',
             price: null,
             askPinCode: false
         };
@@ -29,27 +30,8 @@ export class ChangeCardNumberPage extends React.Component {
                 });
         }
 
-        this.changeText = this.changeText.bind(this);
         this.updateNumberButtonHandler = this.updateNumberButtonHandler.bind(this);
         this.onPinCode = this.onPinCode.bind(this);
-    }
-
-    changeText(text, inputIndex) {
-        if (text !== '' && (![1, 2, 3, 4, 5, 6, 7, 8, 9, 0].includes(+text[text.length - 1])
-                || text.length > 4)) {
-            return;
-        }
-
-        let numberInputs = this.state.numberInputs;
-        numberInputs[inputIndex] = text;
-
-        this.setState({ numberInputs });
-
-        if (text.length === 4 && inputIndex !== 2) {
-            this.inputs[inputIndex + 1].focus();
-        } else if (text.length === 0 && inputIndex !== 0) {
-            this.inputs[inputIndex - 1].focus();
-        }
     }
 
     updateNumberButtonHandler() {
@@ -57,7 +39,7 @@ export class ChangeCardNumberPage extends React.Component {
     }
 
     onPinCode(pinCode) {
-        const newCardNumber = this.state.numberInputs.join('');
+        const newCardNumber = this.state.typedInput;
         const that = this;
         RestTemplate.post('/rest/profile/updateCardNumber', {
             newCardNumber, pinCode
@@ -72,7 +54,7 @@ export class ChangeCardNumberPage extends React.Component {
     }
 
     render() {
-        let buttonDisabled = this.state.numberInputs.join('').length !== 12;
+        let buttonDisabled = this.state.typedInput.length !== 12;
 
         return (
             <View style={styles.viewParrent}>
@@ -82,14 +64,7 @@ export class ChangeCardNumberPage extends React.Component {
                 <View style={styles.card}>
                     <UserCard ref={userCard => this.userCardElement = userCard}>
                         <View style={styles.inputParrent}>
-                            <TextInput onChangeText={e => this.changeText(e, 0)} ref={input => this.inputs[0] = input}
-                                    value={this.state.numberInputs[0]} style={styles.input} keyboardType='number-pad' />
-                            
-                            <TextInput onChangeText={e => this.changeText(e, 1)} ref={input => this.inputs[1] = input}
-                                    value={this.state.numberInputs[1]} style={[styles.input, { left: 110 }]} keyboardType='number-pad' />
-
-                            <TextInput onChangeText={e => this.changeText(e, 2)} ref={input => this.inputs[2] = input}
-                                    value={this.state.numberInputs[2]} style={[styles.input, { left: 220 }]} keyboardType='number-pad' />
+                            <CardInput onType={typedInput => this.setState({ typedInput })} />
                         </View>
                     </UserCard>
                 </View>
@@ -111,20 +86,9 @@ const styles = StyleSheet.create({
     },
 
     inputParrent: {
-        marginLeft: 10
-    },
-
-    input: {
-        position: 'absolute',
-        height: 40,
-        borderColor: 'gray',
-        borderBottomWidth: 1,
-        width: 80,
-
-        letterSpacing: 2,
-        color: '#fff',
-        textAlign: 'center',
-        fontSize: 25,
+        marginLeft: 10,
+        alignItems: 'center',
+        marginTop: -10
     },
 
     card: {
