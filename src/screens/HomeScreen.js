@@ -6,6 +6,7 @@ import { ButtonsGroup, Button } from '../elements/ButtonsGroup';
 import { ChangeCardNumberPage } from './homeScreenPages/ChangeCardNumberPage'; 
 import { ChangeCardTarifPage } from './homeScreenPages/ChangeCardTarifPage';
 import { TranslatePage } from './homeScreenPages/TranslatePage';
+import { UserOperationsHistory } from '../elements/UserOperationsHistory';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Modal from 'react-native-modal';
@@ -66,16 +67,17 @@ class MainPage extends React.Component {
                         <Text style={[s.btnText, s.btnTextInfo]}>Действия</Text>
                     </View>
                 </TouchableOpacity>
-                <View>
-                    <Modal isVisible={this.state.modalVisible} onSwipeComplete={this.closeModal} swipeDirection={['down']} style={{ justifyContent: 'flex-end', margin: 0 }}>
-                        <ButtonsGroup>
-                            <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => this.openScreen('Перевод')} />
-                            <Button title='Смена тарифа карты' icon='credit-card' colors={['#fce043', '#fb7ba2']} onPress={() => this.openScreen('Смена тарифа карты')} />
-                            <Button title='Смена номера карты' icon='numeric' colors={['#9fa4c4', '#9e768f']} onPress={() => this.openScreen('Смена номера карты')} iconElement={MaterialCommunityIcons} />
-                            <Button title='Активировать купон' icon='ticket' colors={['#cdedfd', '#ffec82', '#ffcfd2']} onPress={() => Alert.alert('translate')} />
-                        </ButtonsGroup>
-                    </Modal>
+                <View style={{ height: '100%', paddingBottom: 500, position: 'relative' }}>
+                    <UserOperationsHistory />
                 </View>
+                <Modal isVisible={this.state.modalVisible} onSwipeComplete={this.closeModal} swipeDirection={['down']} style={{ justifyContent: 'flex-end', margin: 0 }}>
+                    <ButtonsGroup>
+                        <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => this.openScreen('Перевод')} />
+                        <Button title='Смена тарифа карты' icon='credit-card' colors={['#fce043', '#fb7ba2']} onPress={() => this.openScreen('Смена тарифа карты')} />
+                        <Button title='Смена номера карты' icon='numeric' colors={['#9fa4c4', '#9e768f']} onPress={() => this.openScreen('Смена номера карты')} iconElement={MaterialCommunityIcons} />
+                        <Button title='Активировать купон' icon='ticket' colors={['#cdedfd', '#ffec82', '#ffcfd2']} onPress={() => Alert.alert('translate')} />
+                    </ButtonsGroup>
+                </Modal>
             </SafeAreaView>
         );
     }

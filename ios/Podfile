@@ -83,6 +83,8 @@ target 'GrandBankMobile' do
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+  pod 'react-native-spinkit', :path => '../node_modules/react-native-spinkit'
+
   target 'GrandBankMobileTests' do
     inherit! :complete
     # Pods for testing
