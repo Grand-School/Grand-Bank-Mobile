@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { HistoryTable } from './HistoryTable';
 import { parseToTime } from '../Utils';
@@ -9,6 +9,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FeatherIcons from 'react-native-vector-icons/Feather';
 
 export function UserOperationsHistory(props) {
+    const [historyTable, setHistoryTable] = useState(null);
+    DataStorage.put('updateHistoryList', () => historyTable.refreshData());
+
     const getCount = () => RestTemplate.get('/rest/profile/history/count');
     const getPage = (page, count) => RestTemplate.get(`/rest/profile/history?page=${page}&count=${count}`);
     const getDate = data => new Date(Date.parse(data.time));
@@ -55,7 +58,7 @@ export function UserOperationsHistory(props) {
     };
     
     const callbacks = { getCount, getPage, getDate, parseToObject };
-    return <HistoryTable title='История' {...callbacks} count={15} />;
+    return <HistoryTable title='История' {...callbacks} count={15} ref={el => setHistoryTable(el)} />;
 }
 
 const historyTableTemplate = [

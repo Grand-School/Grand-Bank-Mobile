@@ -23,7 +23,8 @@ export class MainPage extends React.Component {
       user: this.props.user,
       creditCardsInfo: this.props.creditCardsInfo,
       handlers: this.props.handlers,
-      cardStyles: {}
+      cardStyles: {},
+      updateHistoryList: () => null
     });
   }
 

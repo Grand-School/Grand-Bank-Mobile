@@ -32,6 +32,7 @@ function userRoleAsString(userRole) {
 }
 
 function updateProfileAndGoBack(navigation) {
+    DataStorage.getByKey('updateHistoryList')();
     DataStorage.getByKey('handlers').updateUserProfile()
         .then(() => navigation.navigate('Главная'));
 }

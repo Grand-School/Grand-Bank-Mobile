@@ -12,7 +12,7 @@ export class HistoryTable extends React.Component {
             data: []
         };
         
-        this.refreshHandler = this.refreshHandler.bind(this);
+        this.refreshData = this.refreshData.bind(this);
         this.loadCountAndFirstPage = this.loadCountAndFirstPage.bind(this);
         this.loadData = this.loadData.bind(this);
         this.scrollHandler = this.scrollHandler.bind(this);
@@ -37,7 +37,7 @@ export class HistoryTable extends React.Component {
             .then(({ data: newData }) => that.setState({ data: [...this.state.data, ...newData], refreshing: false }));
     }
 
-    refreshHandler() {
+    refreshData() {
         this.setState({ refreshing: true, data: [], page: 0 }, () => this.loadData(0));
     }
 
@@ -56,7 +56,7 @@ export class HistoryTable extends React.Component {
         let dates = [], years = [];
         return (
             <ScrollView style={styles.scrollView} onScroll={this.scrollHandler} scrollEventThrottle={5}
-                    refreshControl={<RefreshControl onRefresh={this.refreshHandler} refreshing={this.state.refreshing} />}>
+                    refreshControl={<RefreshControl onRefresh={this.refreshData} refreshing={this.state.refreshing} />}>
                 <Text style={styles.title}>{this.props.title}</Text>
 
                 <View style={{ marginBottom: 15 }}>
