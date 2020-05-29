@@ -18,6 +18,7 @@ export default class App extends React.Component {
 
     this.handlers = {
       onLogout: this.logout.bind(this),
+      instanceLogout: this.loggedOut.bind(this),
       updateUserProfile: this.updateUserProfile.bind(this)
     };
 

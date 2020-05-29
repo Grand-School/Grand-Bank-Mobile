@@ -3,8 +3,8 @@
   "displayName": "Grand Bank Mobile",
   "serverUrl": "http://localhost:8080",
   "oauth": {
-    "clientId": "6LGF6EU6BIM57UDD",
-    "clientSecret": "125c6fd4-66b5-40b4-af59-e4b4d33d42b4",
+    "clientId": "HTTQPCUYTXH3M5IH",
+    "clientSecret": "c8942cfe-0452-46b9-b767-a71a03ab744b",
     "redirectUrl": "com.whatever.url.you.configured.in.uber.oauth://redirect",
     "scopes": ["user_info"],
     "serviceConfiguration": {

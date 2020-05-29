@@ -58,7 +58,7 @@ export function UserOperationsHistory(props) {
     };
     
     const callbacks = { getCount, getPage, getDate, parseToObject };
-    return <HistoryTable title='История' {...callbacks} count={15} ref={el => setHistoryTable(el)} />;
+    return <HistoryTable title='История' {...callbacks} count={1} ref={el => setHistoryTable(el)} />;
 }
 
 const historyTableTemplate = [

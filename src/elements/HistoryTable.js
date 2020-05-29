@@ -27,7 +27,8 @@ export class HistoryTable extends React.Component {
     }
 
     loadData(page) {
-        if (!this.hasMoreData()) {
+        console.log('load page ' + page)
+        if (page !== 0 && !this.hasMoreData()) {
             return;
         }
 
@@ -43,13 +44,14 @@ export class HistoryTable extends React.Component {
 
     scrollHandler(event) {
         let e = event.nativeEvent;
-        if (e.contentOffset.y + e.layoutMeasurement.height === e.contentSize.height) {
+        if (e.contentOffset.y + e.layoutMeasurement.height >= e.contentSize.height) {
+            console.log('buttom')
             this.loadData(++this.state.page);
         }
     }
 
     hasMoreData() {
-        return this.props.count * this.state.page < this.state.count;
+        return this.props.count * (this.state.page + 1) < this.state.count;
     }
 
     render() {

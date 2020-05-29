@@ -4,8 +4,8 @@ const getUserCard = user => findCard(user.cardType);
 
 const findCard = codeName => DataStorage.getByKey('creditCardsInfo').filter(info => info.codeName === codeName)[0];
 
-function parseErrorResponse() {
-
+function parseErrorResponse(data) {
+    return data.error;
 }
 
 function parseToDayMonth(date) {

@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, Button, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import DataStorage from '../DataStorage';
 import { userRoleAsString } from '../Utils';
+import { ChangeUsernamePage } from './settingsScreenPages/ChangeUsernamePage';
 
-export class SettingsScreen extends React.Component {
+export function SettingsScreen() {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name='Главная' component={MainPage} />
+      <Stack.Screen name='Изменить логин' component={ChangeUsernamePage} />
+    </Stack.Navigator>
+  );
+}
+
+class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.updateUserProfile = this.updateUserProfile.bind(this);
@@ -18,16 +31,20 @@ export class SettingsScreen extends React.Component {
   }
 
   render() {
-    let user = DataStorage.getByKey('user');
     const handlers = DataStorage.getByKey('handlers');
 
     return (
       <SafeAreaView>
         <View style={{ padding: 10 }}>
-          <UserInfo user={user} />
+          <UserInfo />
 
           <View style={style.actionsList}>
             <ActionsList title='Профиль'>
+              <SettingsButton onPress={() => this.props.navigation.navigate('Изменить логин')} icon='key' iconElement={FontAwesome5Icon} 
+                  text='Изменить логин' colors={['#bbf0f3', '#f6d285']} firstItem={true} lastItem={true} />
+            </ActionsList>
+
+            <ActionsList title='Аккаунт'>
               <SettingsButton onPress={this.updateUserProfile} icon='refresh' 
                   text='Обновить профиль' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
               <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
@@ -59,12 +76,14 @@ function SettingsButton(props) {
     radiusStyle.borderTopRightRadius = 5;
   }
 
+  let IconElement = props.iconElement || Icon;
+
   return (
     <View>
       <TouchableOpacity onPress={props.onPress} style={btnTouchable}>
         <View style={[btnStyle, bs.btnLight, style.buttonView, radiusStyle]}> 
           <LinearGradient colors={props.colors} style={style.iconView}>
-            <Icon style={style.buttonIcon} name={props.icon} size={24} />
+            <IconElement style={style.buttonIcon} name={props.icon} size={24} />
           </LinearGradient>
           <View style={style.textView}>
             <Text style={style.buttonText}>{props.text}</Text>
@@ -80,16 +99,34 @@ function SettingsButton(props) {
   );
 }
 
-const UserInfo = props => {
-  return (
-    <View>
-      <Text style={style.userName}>{props.user.name} {props.user.surname}</Text>
-      <Text>Логин: <Text style={style.bold}>{props.user.username}</Text></Text>
-      <Text>Класс: <Text style={style.bold}>{props.user.class}</Text></Text>
-      <Text>Зарплата: <Text style={style.bold}>{props.user.salary} грандиков</Text></Text>
-      <Text>Роль: <Text style={style.bold}>{userRoleAsString(props.user.role)}</Text></Text>
-    </View>
-  );
+class UserInfo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: DataStorage.getByKey('user')
+    };
+    DataStorage.onDataChange('user', this.updateUser);
+  }
+
+  componentWillUnmount() {
+    DataStorage.removeOnDataChange('user', this.updateUser);
+  }
+
+  updateUser(user) {
+    this.setState({ user })
+  }
+
+  render() {
+    return (
+      <View>
+        <Text style={style.userName}>{this.state.user.name} {this.state.user.surname}</Text>
+        <Text>Логин: <Text style={style.bold}>{this.state.user.username}</Text></Text>
+        <Text>Класс: <Text style={style.bold}>{this.state.user.class}</Text></Text>
+        <Text>Зарплата: <Text style={style.bold}>{this.state.user.salary} грандиков</Text></Text>
+        <Text>Роль: <Text style={style.bold}>{userRoleAsString(this.state.user.role)}</Text></Text>
+      </View>
+    );
+  }
 }
 
 const ActionsList = props => {
