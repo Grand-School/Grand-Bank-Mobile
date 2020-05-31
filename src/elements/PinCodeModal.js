@@ -11,7 +11,7 @@ export class PinCodeModal extends React.Component {
         this.state = { pinCode: '' };
 
         this.onButton = this.onButton.bind(this);
-        this.onClear = this.onClear.bind(this);
+        this.clear = this.clear.bind(this);
         this.onRemoveLast = this.onRemoveLast.bind(this);
     }
     
@@ -30,7 +30,7 @@ export class PinCodeModal extends React.Component {
         }
     }
 
-    onClear() {
+    clear() {
         this.setState({ pinCode: '' });
     }
 
@@ -45,7 +45,7 @@ export class PinCodeModal extends React.Component {
         return (
             <Modal isVisible={this.props.isVisible} onBackdropPress={() => this.props.onCloseAsk()}>
                 <View style={style.pinCodeView}>
-                    <Text style={style.title}>Пожалуйста, введите ваш пин-код</Text>
+                    <Text style={style.title}>{this.props.title || 'Пожалуйста, введите ваш пин-код'}</Text>
                     <View style={style.box}>
                         <Text style={style.boxText}>{pinCodeBox}</Text>
                     </View>
@@ -59,7 +59,7 @@ export class PinCodeModal extends React.Component {
                         <PinCodeNumButton num='7' onPress={this.onButton} />
                         <PinCodeNumButton num='8' onPress={this.onButton} />
                         <PinCodeNumButton num='9' onPress={this.onButton} />
-                        <PinCodeButton text='clear' onPress={this.onClear} borderColor='#ff3c41' />
+                        <PinCodeButton text='clear' onPress={this.clear} borderColor='#ff3c41' />
                         <PinCodeNumButton num='0' onPress={this.onButton} />
                         <PinCodeButton icon='backspace' onPress={this.onRemoveLast} borderColor='#ff3c41' />
                     </View>

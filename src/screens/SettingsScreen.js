@@ -9,6 +9,7 @@ import DataStorage from '../DataStorage';
 import { userRoleAsString } from '../Utils';
 import { ChangeUsernamePage } from './settingsScreenPages/ChangeUsernamePage';
 import { ChangePasswordPage } from './settingsScreenPages/ChangePasswordPage';
+import { ChangePinCode } from './settingsScreenPages/ChangePinCodeScript';
 
 export function SettingsScreen() {
   const Stack = createStackNavigator();
@@ -40,12 +41,14 @@ class MainPage extends React.Component {
         <View style={{ padding: 10 }}>
           <UserInfo />
 
-          <View style={style.actionsList}>
+          <View>
             <ActionsList title='Профиль'>
               <SettingsButton onPress={() => this.props.navigation.navigate('Изменить логин')} icon='key' iconElement={FontAwesome5Icon} 
                   text='Изменить логин' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
               <SettingsButton onPress={() => this.props.navigation.navigate('Изменить пароль')} icon='key' iconElement={FontAwesome5Icon} 
-                  text='Изменить пароль' colors={['#bbf0f3', '#f6d285']} lastItem={true} />
+                  text='Изменить пароль' colors={['#bbf0f3', '#f6d285']} />
+              <SettingsButton onPress={() => this.changePinCode.start()} icon='key' iconElement={FontAwesome5Icon} 
+                  text='Изменить пин-код' colors={['#bbf0f3', '#f6d285']} lastItem={true} />
             </ActionsList>
 
             <ActionsList title='Аккаунт'>
@@ -56,6 +59,7 @@ class MainPage extends React.Component {
             </ActionsList>
           </View>
         </View>
+        <ChangePinCode ref={ref => this.changePinCode = ref} />
       </SafeAreaView>
     );
   }
@@ -137,7 +141,7 @@ class UserInfo extends React.Component {
 
 const ActionsList = props => {
   return (
-    <View>
+    <View style={{ marginTop: 15 }}>
       <Text style={style.sectionTitle}>{props.title}</Text>
       
       <View style={style.buttonsList}>
@@ -155,10 +159,6 @@ const style = StyleSheet.create({
     fontSize: 24,
     fontWeight: '800',
     color: 'black'
-  },
-
-  actionsList: {
-    marginTop: 40
   },
 
   buttonsList: {
