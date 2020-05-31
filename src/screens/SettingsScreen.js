@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import DataStorage from '../DataStorage';
 import { userRoleAsString } from '../Utils';
 import { ChangeUsernamePage } from './settingsScreenPages/ChangeUsernamePage';
+import { ChangePasswordPage } from './settingsScreenPages/ChangePasswordPage';
 
 export function SettingsScreen() {
   const Stack = createStackNavigator();
@@ -15,6 +16,7 @@ export function SettingsScreen() {
     <Stack.Navigator>
       <Stack.Screen name='Главная' component={MainPage} />
       <Stack.Screen name='Изменить логин' component={ChangeUsernamePage} />
+      <Stack.Screen name='Изменить пароль' component={ChangePasswordPage} />
     </Stack.Navigator>
   );
 }
@@ -41,7 +43,9 @@ class MainPage extends React.Component {
           <View style={style.actionsList}>
             <ActionsList title='Профиль'>
               <SettingsButton onPress={() => this.props.navigation.navigate('Изменить логин')} icon='key' iconElement={FontAwesome5Icon} 
-                  text='Изменить логин' colors={['#bbf0f3', '#f6d285']} firstItem={true} lastItem={true} />
+                  text='Изменить логин' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
+              <SettingsButton onPress={() => this.props.navigation.navigate('Изменить пароль')} icon='key' iconElement={FontAwesome5Icon} 
+                  text='Изменить пароль' colors={['#bbf0f3', '#f6d285']} lastItem={true} />
             </ActionsList>
 
             <ActionsList title='Аккаунт'>
@@ -105,6 +109,8 @@ class UserInfo extends React.Component {
     this.state = {
       user: DataStorage.getByKey('user')
     };
+
+    this.updateUser = this.updateUser.bind(this);
     DataStorage.onDataChange('user', this.updateUser);
   }
 

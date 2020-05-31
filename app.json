@@ -3,8 +3,8 @@
   "displayName": "Grand Bank Mobile",
   "serverUrl": "http://localhost:8080",
   "oauth": {
-    "clientId": "PAPN5LOGL4LICHCT",
-    "clientSecret": "584a370a-263f-4723-94af-3a95aa398d44",
+    "clientId": "26LNMNQRLVMQMLWF",
+    "clientSecret": "29b593db-e4a6-4437-b4fd-05e99bb0b1a3",
     "redirectUrl": "com.ua.grandschool.mobile://login/callback",
     "scopes": ["user_info", "pages:profile"],
     "serviceConfiguration": {

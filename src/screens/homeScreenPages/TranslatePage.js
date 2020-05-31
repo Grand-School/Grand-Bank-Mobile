@@ -4,6 +4,7 @@ import { CardInput } from '../../elements/CardInput';
 import { PinCodeModal } from '../../elements/PinCodeModal';
 import RestTemplate from '../../RestTemplate';
 import { updateProfileAndGoBack, parseErrorResponse } from '../../Utils';
+import { InputItem as Item } from '../../elements/InputItem';
 
 export class TranslatePage extends React.Component {
     constructor(props) {
@@ -144,13 +145,6 @@ class PriceInput extends React.Component {
     }
 }
 
-const Item = props => (
-    <View style={style.cardInputView}>
-        {typeof props.title === 'string' ? <Text>{props.title}</Text> : props.title}
-        <View style={[style.cardInput, props.style ? props.style : {}]}>{props.children}</View>
-    </View>
-);
-
 class Switch extends React.Component {
     constructor(props) {
         super(props);
@@ -239,19 +233,6 @@ const style = StyleSheet.create({
 
     selectedItemText: {
         color: 'white'
-    },
-
-    cardInput: {
-        width: '100%',
-        height: 40,
-        marginTop: 5
-    },
-
-    cardInputView: {
-        width: '100%',
-        marginTop: 15,
-        marginBottom: 15,
-        alignSelf: 'center'
     },
 
     input: {
