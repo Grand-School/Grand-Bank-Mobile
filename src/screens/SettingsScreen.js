@@ -3,7 +3,8 @@ import { Text, View, Button, StyleSheet, SafeAreaView, TouchableOpacity, Alert }
 import { createStackNavigator } from '@react-navigation/stack';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import DataStorage from '../DataStorage';
 import { userRoleAsString } from '../Utils';
@@ -43,12 +44,12 @@ class MainPage extends React.Component {
 
           <View>
             <ActionsList title='Профиль'>
-              <SettingsButton onPress={() => this.props.navigation.navigate('Изменить логин')} icon='key' iconElement={FontAwesome5Icon} 
-                  text='Изменить логин' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
-              <SettingsButton onPress={() => this.props.navigation.navigate('Изменить пароль')} icon='key' iconElement={FontAwesome5Icon} 
-                  text='Изменить пароль' colors={['#bbf0f3', '#f6d285']} />
-              <SettingsButton onPress={() => this.changePinCode.start()} icon='key' iconElement={FontAwesome5Icon} 
-                  text='Изменить пин-код' colors={['#bbf0f3', '#f6d285']} lastItem={true} />
+              <SettingsButton onPress={() => this.props.navigation.navigate('Изменить логин')} icon='user' iconElement={AntDesignIcon} 
+                  text='Изменить логин' colors={['#aff6cf', '#9f98e8']} firstItem={true} />
+              <SettingsButton onPress={() => this.props.navigation.navigate('Изменить пароль')} icon='key' iconElement={AntDesignIcon} 
+                  text='Изменить пароль' colors={['#b1ade2', '#7ddff8']} />
+              <SettingsButton onPress={() => this.changePinCode.start()} icon='numeric' iconElement={MaterialCommunityIcons} 
+                  text='Изменить пин-код' colors={['#f0ecfc', '#c797eb']} lastItem={true} />
             </ActionsList>
 
             <ActionsList title='Аккаунт'>
@@ -91,7 +92,7 @@ function SettingsButton(props) {
       <TouchableOpacity onPress={props.onPress} style={btnTouchable}>
         <View style={[btnStyle, bs.btnLight, style.buttonView, radiusStyle]}> 
           <LinearGradient colors={props.colors} style={style.iconView}>
-            <IconElement style={style.buttonIcon} name={props.icon} size={24} />
+            <IconElement style={style.buttonIcon} name={props.icon} size={30} />
           </LinearGradient>
           <View style={style.textView}>
             <Text style={style.buttonText}>{props.text}</Text>
@@ -184,15 +185,20 @@ const style = StyleSheet.create({
   },
 
   buttonIcon: {
-    marginRight: 10,
-    minWidth: 30
+    width: 35,
+    height: 35,
+    textAlign: 'center'
   },
 
   iconView: {
     borderRadius: 5,
     padding: 5,
-    maxWidth: 30,
-    marginRight: 5
+    marginRight: 5,
+    width: 40,
+    height: 40,
+    maxWidth: 40,
+    maxHeight: 40,
+    alignItems: 'center'
   },
 
   textView: {
