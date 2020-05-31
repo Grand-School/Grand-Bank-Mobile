@@ -38,7 +38,7 @@ export class HistoryTable extends React.Component {
     }
 
     refreshData() {
-        this.setState({ refreshing: true, data: [], page: 0 }, () => this.loadData(0));
+        this.setState({ data: [], page: 0 }, () => this.loadCountAndFirstPage());
     }
 
     scrollHandler(event) {
@@ -49,7 +49,7 @@ export class HistoryTable extends React.Component {
     }
 
     hasMoreData() {
-        return this.props.count * (this.state.page + 1) < this.state.count;
+        return this.props.count * this.state.page < this.state.count;
     }
 
     render() {
@@ -76,10 +76,10 @@ export class HistoryTable extends React.Component {
                         }
 
                         return (
-                            <View key={item.id}>
+                            <>
                                 {shouldPrintDate && <Text style={styles.date}>{dateMonth} {shouldPrintYear && year}</Text>}
                                 {this.props.parseToObject(item)}
-                            </View>
+                            </>
                         )
                     })}
 
