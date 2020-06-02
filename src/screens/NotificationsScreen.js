@@ -1,21 +1,59 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { HistoryTable } from '../elements/HistoryTable';
 import RestTemplate from '../RestTemplate';
-import { parseToDateTime } from '../Utils';
+import { parseToDateTime, parseErrorResponse, updateProfileAndGoBack } from '../Utils';
+import { PinCodeModal } from '../elements/PinCodeModal';
 
-export class NotificationsScreen extends React.Component {
+export function NotificationsScreen() {
+    let [pinCode, setPinCode] = useState(null);
+    let [historyTable, setHistoryTable] = useState(null);
+
+    const getCount = () => RestTemplate.get('/rest/profile/notifications/count');
+    const getPage = (page, count) => RestTemplate.get(`/rest/profile/notifications?page=${page}&count=${count}`);
+    const getDate = data => new Date(Date.parse(data.date));
+    const parseToObject = data => parseDataToObject(data, { pinCode, historyTable });
+    const empty = (
+        <View>
+            <Text style={{ textAlign: 'center' }}>У вас нет уведомлений!</Text>
+        </View>
+    );
+
+    const callbacks = { getCount, getPage, getDate, parseToObject, empty };
+    return (
+        <>
+            <HistoryTable {...callbacks} count={5} showDate={false} ref={item => setHistoryTable(item)} />
+            <PinCode ref={item => setPinCode(item)} />
+        </>
+    );
+}
+
+class PinCode extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            visible: false
+        };
+
+        this.show = this.show.bind(this);
+        this.hide = this.hide.bind(this);
+        this.callback = () => null;
+    }
+
+    show() {
+        this.setState({ visible: true });
+    }
+
+    hide() {
+        this.setState({ visible: false })
+    }
+
     render() {
-        const getCount = () => RestTemplate.get('/rest/profile/notifications/count');
-        const getPage = (page, count) => RestTemplate.get(`/rest/profile/notifications?page=${page}&count=${count}`);
-        const getDate = data => new Date(Date.parse(data.date));
-
-        const callbacks = { getCount, getPage, getDate, parseToObject: parseDataToObject };
-        return <HistoryTable {...callbacks} count={5} showDate={false} />
+        return <PinCodeModal isVisible={this.state.visible} onCloseAsk={this.hide} onPinCode={this.callback} />
     }
 }
 
-function parseDataToObject(data) {
+function parseDataToObject(data, options) {
     let settings = userNotificationTableTemplate[data.type];
     if (!settings) {
         return (
@@ -42,7 +80,7 @@ function parseDataToObject(data) {
             <View style={{ width: '80%', flexDirection: 'row', marginTop: 5 }}>
                 {printData.buttons.map((item, index) => (
                     <TouchableOpacity style={[{ width: '40%', borderWidth: 1, padding: 5 }, (index !== printData.buttons.length && { marginRight: 5 })]}
-                        onPress={() => item.onPress(data.id)}>
+                        onPress={() => item.onPress(data.id, options)}>
                         <Text style={{ textAlign: 'center' }}>{item.text}</Text>
                     </TouchableOpacity>
                 ))}
@@ -125,7 +163,7 @@ const userNotificationTableTemplate = {
         let companyMember = notification.companyMember;
 
         return {
-            title: `Приглашение в фирму ${companyMember.company.name}`,
+            title: `Приглашение в фирму`,
             data: [`Вам пришло приглашение на участие в фирме ${companyMember.company.name}.`],
             buttons: [
                 {
@@ -146,9 +184,17 @@ const userNotificationTableTemplate = {
     TRANSLATE_REQUEST: notification => {
         let translateRequest = notification.translateRequest;
         
-        let dataArr = [`Вам пришёл запрос на перевод ${translateRequest.price} грандиков от пользователя ${translateRequest.author.name} ${translateRequest.author.surname}`];
+        let dataArr = [
+            <Text>
+                Вам пришёл запрос на перевод&nbsp;
+                <Text style={{ fontWeight: '600' }}>{translateRequest.price} грандиков</Text>
+                &nbsp;от пользователя&nbsp;
+                <Text style={{ fontWeight: '600' }}>{translateRequest.author.name} {translateRequest.author.surname}</Text>
+            </Text>
+        ];
+
         if (translateRequest.message) {
-            dataArr.push(<Text style={{ color: 'grey' }}>{message}</Text>);
+            dataArr.push(<Text style={{ color: 'grey' }}>{translateRequest.message}</Text>);
         }
         
         return {
@@ -157,14 +203,31 @@ const userNotificationTableTemplate = {
             buttons: [
                 {
                     text: 'Подтвердить',
-                    onPress(notificationId) {
-                        
+                    onPress(notificationId, { pinCode, historyTable }) {
+                        pinCode.callback = typedPinCode => {
+                            RestTemplate.post(`/rest/profile/transaction/confirm/${notificationId}`, typedPinCode)
+                                .then(({ data, requestInfo }) => {
+                                    if (!requestInfo.isOk) {
+                                        Alert.alert('Ошибка подтверждения запроса на перевод!', parseErrorResponse(data));
+                                    }
+                                    pinCode.hide();
+                                    historyTable.refreshData();
+                                    updateProfileAndGoBack();
+                                });
+                        };
+                        pinCode.show();
                     }
                 },
                 {
                     text: 'Отклонить',
-                    onPress(notificationId) {
-                        
+                    onPress(notificationId, { historyTable }) {
+                        RestTemplate.post(`/rest/profile/transaction/decline/${notificationId}`)
+                            .then(({ data, requestInfo }) => {
+                                if (!requestInfo.isOk) {
+                                    Alert.alert('Ошибка отклонения запроса на перевод!', parseErrorResponse(data));
+                                }
+                                historyTable.refreshData();
+                            });
                     }
                 }
             ]

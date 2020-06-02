@@ -56,8 +56,13 @@ export function UserOperationsHistory(props) {
             </View>
         );
     };
+    const empty = (
+        <View>
+            <Text style={{ textAlign: 'center' }}>У вас ещё нет операций!</Text>
+        </View>
+    );
     
-    const callbacks = { getCount, getPage, getDate, parseToObject };
+    const callbacks = { getCount, getPage, getDate, parseToObject, empty };
     return <HistoryTable title='История' {...callbacks} count={15} showDate={true} ref={el => setHistoryTable(el)} />;
 }
 

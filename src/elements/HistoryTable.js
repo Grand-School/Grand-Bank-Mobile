@@ -38,7 +38,7 @@ export class HistoryTable extends React.Component {
     }
 
     refreshData() {
-        this.setState({ data: [], page: 0 }, () => this.loadCountAndFirstPage());
+        this.setState({ data: [], page: 0, refreshing: true }, () => this.loadCountAndFirstPage());
     }
 
     scrollHandler(event) {
@@ -60,6 +60,7 @@ export class HistoryTable extends React.Component {
                 {this.props.title && <Text style={styles.title}>{this.props.title}</Text>}
 
                 <View style={{ marginBottom: 15 }}>
+                    {this.state.data.length === 0 && this.props.empty}
                     {this.state.data.map(item => {
                         let date = this.props.getDate(item);
                         let dateMonth = parseToDayMonth(date);
