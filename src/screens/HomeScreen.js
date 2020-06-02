@@ -37,10 +37,12 @@ class MainPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalVisible: false
+            modalVisible: false,
+            cardViewHeight: 0
         };
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
+        this.cardViewLayoutHandler = this.cardViewLayoutHandler.bind(this);
     }
 
     closeModal() {
@@ -55,19 +57,26 @@ class MainPage extends React.Component {
         this.props.navigation.navigate(screen);
         this.closeModal();
     }
+    
+    cardViewLayoutHandler(event) {
+        let { height } = event.nativeEvent.layout;
+        this.setState({ cardViewHeight: height });
+    }
 
     render() {
         return (
-            <SafeAreaView>
-                <View style={styles.card}>
-                    <UserCard />
-                </View>
-                <TouchableOpacity onPress={this.openModal} style={[s.btnTouchAble, { width: 320, alignSelf: 'center' }]}>
-                    <View style={[s.btn, s.btnInfo, {borderRadius: 15}]}>
-                        <Text style={[s.btnText, s.btnTextInfo]}>Действия</Text>
+            <>
+                <View onLayout={this.cardViewLayoutHandler}>
+                    <View style={styles.card}>
+                        <UserCard />
                     </View>
-                </TouchableOpacity>
-                <View style={{ height: '100%', paddingBottom: 500, position: 'relative' }}>
+                    <TouchableOpacity onPress={this.openModal} style={[s.btnTouchAble, { width: 320, alignSelf: 'center' }]}>
+                        <View style={[s.btn, s.btnInfo, {borderRadius: 15}]}>
+                            <Text style={[s.btnText, s.btnTextInfo]}>Действия</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ height: '100%', paddingBottom: this.state.cardViewHeight }}>
                     <UserOperationsHistory />
                 </View>
                 <Modal isVisible={this.state.modalVisible} onSwipeComplete={this.closeModal} swipeDirection={['down']} style={{ justifyContent: 'flex-end', margin: 0 }}>
@@ -78,7 +87,7 @@ class MainPage extends React.Component {
                         <Button title='Активировать купон' icon='ticket' colors={['#cdedfd', '#ffec82', '#ffcfd2']} onPress={() => Alert.alert('translate')} />
                     </ButtonsGroup>
                 </Modal>
-            </SafeAreaView>
+            </>
         );
     }
 }
