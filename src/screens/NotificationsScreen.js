@@ -175,14 +175,33 @@ const userNotificationTableTemplate = {
             buttons: [
                 {
                     text: 'Отменить',
-                    onPress(notificationId) {
-
+                    onPress(notificationId, { historyTable, pinCode }) {
+                        pinCode.callback = pinCodeType => {
+                            RestTemplate.post(`/rest/profile/company/order/cancel?notificationId=${notificationId}&pinCode=${pinCodeType}`)
+                                .then(({ requestInfo, data }) => {
+                                    if (!requestInfo.isOk) {
+                                        console.log(requestInfo);
+                                        Alert.alert('Ошибка отмены операции!', parseErrorResponse(data));
+                                    }
+                                    pinCode.finish();
+                                    historyTable.refreshData();
+                                    updateProfileAndGoBack();
+                                });
+                        };
+                        pinCode.show();
                     }
                 },
                 {
                     text: 'Отклонить',
-                    onPress(notificationId) {
-                        
+                    onPress(notificationId, { historyTable }) {
+                        RestTemplate.delete(`/rest/profile/company/order/cancel?notificationId=${notificationId}`)
+                            .then(({ requestInfo, data }) => {
+                                if (!requestInfo.isOk) {
+                                    console.log(requestInfo);
+                                    Alert.alert('Ошибка отклонения отмены операции!', parseErrorResponse(data));
+                                }
+                                historyTable.refreshData();
+                            });
                     }
                 }
             ]
