@@ -17,6 +17,14 @@ export class NotificationsScreen extends React.Component {
 
 function parseDataToObject(data) {
     let settings = userNotificationTableTemplate[data.type];
+    if (!settings) {
+        return (
+            <View style={{ borderRadius: 5, borderWidth: 1, padding: 5, marginBottom: 15 }}>
+                <Text style={{ textAlign: 'center' }}>Обновите приложение, что бы увидеть это уведомление!</Text>
+            </View>
+        );
+    }
+
     let printData = settings(data);
     let time = new Date(Date.parse(data.date));
 
