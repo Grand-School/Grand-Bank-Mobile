@@ -57,14 +57,14 @@ export class HistoryTable extends React.Component {
         return (
             <ScrollView style={styles.scrollView} onScroll={this.scrollHandler} scrollEventThrottle={5}
                     refreshControl={<RefreshControl onRefresh={this.refreshData} refreshing={this.state.refreshing} />}>
-                <Text style={styles.title}>{this.props.title}</Text>
+                {this.props.title && <Text style={styles.title}>{this.props.title}</Text>}
 
                 <View style={{ marginBottom: 15 }}>
                     {this.state.data.map(item => {
                         let date = this.props.getDate(item);
                         let dateMonth = parseToDayMonth(date);
 
-                        let shouldPrintDate = !dates.includes(dateMonth);
+                        let shouldPrintDate = !dates.includes(dateMonth) && this.props.showDate;
                         if (shouldPrintDate) {
                             dates.push(dateMonth);
                         }

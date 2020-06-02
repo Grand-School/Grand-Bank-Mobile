@@ -20,6 +20,11 @@ function parseToTime(date) {
     return `${hour}:${minute}`;
 }
 
+function parseToDateTime(date) {
+    const dateTimeFormat = new Intl.DateTimeFormat('ru', { minute: '2-digit', hour: '2-digit', month: '2-digit', day: '2-digit', year: 'numeric' });
+    return dateTimeFormat.formatToParts(date).map(item => item.value).join('').replace(',', '');
+}
+
 function userRoleAsString(userRole) {
     switch(userRole) {
         case 'ROLE_ADMIN': return 'Администратор';
@@ -40,5 +45,5 @@ function updateProfileAndGoBack(navigation, updateHistory = true) {
 }
 
 module.exports = {
-    getUserCard, parseErrorResponse, findCard, updateProfileAndGoBack, userRoleAsString, parseToDayMonth, parseToTime
+    getUserCard, parseErrorResponse, findCard, updateProfileAndGoBack, userRoleAsString, parseToDayMonth, parseToTime, parseToDateTime
 };

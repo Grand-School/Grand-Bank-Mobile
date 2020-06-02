@@ -4,11 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { HomeScreen } from './../screens/HomeScreen';
+import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { SettingsScreen } from './../screens/SettingsScreen';
 import DataStorage from './../DataStorage';
 
 const navigatioSettings = [
   { name: 'Главная', component: HomeScreen, icon: 'ios-home' },
+  { name: 'Уведомления', component: NotificationsScreen, icon: 'ios-notifications' },
   { name: 'Настройки', component: SettingsScreen, icon: 'ios-settings' }
 ];
 
