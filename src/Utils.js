@@ -41,7 +41,7 @@ function updateProfileAndGoBack(navigation, updateHistory = true) {
         DataStorage.getByKey('updateHistoryList')();
     }
     DataStorage.getByKey('handlers').updateUserProfile()
-        .then(() => navigation.navigate('Главная'));
+        .then(() => navigation && navigation.navigate('Главная'));
 }
 
 module.exports = {

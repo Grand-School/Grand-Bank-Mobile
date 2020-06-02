@@ -164,18 +164,32 @@ const userNotificationTableTemplate = {
 
         return {
             title: `Приглашение в фирму`,
-            data: [`Вам пришло приглашение на участие в фирме ${companyMember.company.name}.`],
+            data: [
+                <Text>Вам пришло приглашение на участие в фирме <Text style={{ fontWeight: '600' }}>{companyMember.company.name}</Text>.</Text>
+            ],
             buttons: [
                 {
                     text: 'Принять',
-                    onPress(notificationId) {
-                        
+                    onPress(notificationId, { historyTable }) {
+                        RestTemplate.post('/rest/profile/company/member/' + notificationId)
+                            .then(({ requestInfo, data }) => {
+                                if (!requestInfo.isOk) {
+                                    Alert.alert('Ошибка принятия приглашения в фирму!', parseErrorResponse(data));
+                                }
+                                historyTable.refreshData();
+                            });
                     }
                 },
                 {
                     text: 'Отклонить',
-                    onPress(notificationId) {
-                        
+                    onPress(notificationId, { historyTable }) {
+                        RestTemplate.delete('/rest/profile/company/member/' + notificationId)
+                            .then(({ requestInfo, data }) => {
+                                if (!requestInfo.isOk) {
+                                    Alert.alert('Ошибка отклонения приглашения в фирму!', parseErrorResponse(data));
+                                }
+                                historyTable.refreshData();
+                            });
                     }
                 }
             ]

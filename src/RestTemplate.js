@@ -13,6 +13,10 @@ class RestTemplate {
         return await this.fetch(url, 'POST', body);
     }
 
+    async delete(url, body) {
+        return await this.fetch(url, 'DELETE', body);
+    }
+
     async fetch(url, method, body = null) {
         let requestInfo;
         let token = await this.getToken();
