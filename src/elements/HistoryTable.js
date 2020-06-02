@@ -56,7 +56,7 @@ export class HistoryTable extends React.Component {
         let dates = [], years = [];
         return (
             <ScrollView style={styles.scrollView} onScroll={this.scrollHandler} scrollEventThrottle={5}
-                    refreshControl={<RefreshControl onRefresh={this.refreshData} refreshing={this.state.refreshing} />}>
+                    refreshControl={<RefreshControl onRefresh={this.refreshData} refreshing={this.state.refreshing} tintColor='black' colors={['black']} />}>
                 {this.props.title && <Text style={styles.title}>{this.props.title}</Text>}
 
                 <View style={{ marginBottom: 15 }}>
