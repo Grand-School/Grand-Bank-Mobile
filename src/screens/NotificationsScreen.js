@@ -45,11 +45,17 @@ class PinCode extends React.Component {
     }
 
     hide() {
-        this.setState({ visible: false })
+        this.setState({ visible: false });
+    }
+
+    finish() {
+        this.hide();
+        this.callback = () => null;
+        this.pinCode.clear();
     }
 
     render() {
-        return <PinCodeModal isVisible={this.state.visible} onCloseAsk={this.hide} onPinCode={this.callback} />
+        return <PinCodeModal isVisible={this.state.visible} onCloseAsk={this.hide} onPinCode={this.callback} ref={ref => this.pinCode = ref} />
     }
 }
 
@@ -117,18 +123,38 @@ const userNotificationTableTemplate = {
 
         return {
             title: `Покупка товаров у фирмы ${operation.company.name}`,
-            data: [`Товары: ${itemsName}.`, `Сумма: ${price} грандиков.`],
+            data: [
+                <Text>Товары: <Text style={{ fontWeight: '500' }}>{itemsName}</Text>.</Text>, 
+                <Text>Сумма: <Text style={{ fontWeight: '500' }}>{price} грандиков</Text>.</Text>
+            ],
             buttons: [
                 {
                     text: 'Подтвердиь',
-                    onPress(notificationId) {
-
+                    onPress(notificationId, { pinCode, historyTable }) {
+                        pinCode.callback = pinCodeType => {
+                            RestTemplate.post(`/rest/profile/company/order?notificationId=${notificationId}&pinCode=${pinCodeType}`)
+                                .then(({ data, requestInfo }) => {
+                                    if (!requestInfo.isOk) {
+                                        Alert.alert('Ошибка подтверждения запроса!', parseErrorResponse(data));
+                                    }
+                                    pinCode.finish();
+                                    historyTable.refreshData();
+                                    updateProfileAndGoBack();
+                                });
+                        };
+                        pinCode.show();
                     }
                 },
                 {
                     text: 'Отменить',
-                    onPress(notificationId) {
-                        
+                    onPress(notificationId, { historyTable }) {
+                        RestTemplate.delete(`/rest/profile/company/order?notificationId=${notificationId}`)
+                            .then(({ data, requestInfo }) => {
+                                if (!requestInfo.isOk) {
+                                    Alert.alert('Ошибка отклонения запроса!', parseErrorResponse(data));
+                                }
+                                historyTable.refreshData();
+                            });
                     }
                 }
             ]
@@ -142,12 +168,15 @@ const userNotificationTableTemplate = {
 
         return {
             title: `Отмена покупки товаров у фирмы ${operation.company.name}`,
-            data: [`Товары: ${itemsName}.`, `Сумма: ${price} грандиков.`],
+            data: [
+                <Text>Товары: <Text style={{ fontWeight: '500' }}>{itemsName}</Text>.</Text>, 
+                <Text>Сумма: <Text style={{ fontWeight: '500' }}>{price} грандиков</Text>.</Text>
+            ],
             buttons: [
                 {
                     text: 'Отменить',
                     onPress(notificationId) {
-                        
+
                     }
                 },
                 {
@@ -224,7 +253,7 @@ const userNotificationTableTemplate = {
                                     if (!requestInfo.isOk) {
                                         Alert.alert('Ошибка подтверждения запроса на перевод!', parseErrorResponse(data));
                                     }
-                                    pinCode.hide();
+                                    pinCode.finish();
                                     historyTable.refreshData();
                                     updateProfileAndGoBack();
                                 });
