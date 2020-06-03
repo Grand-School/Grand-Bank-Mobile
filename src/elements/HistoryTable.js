@@ -93,7 +93,7 @@ export class HistoryTable extends React.Component {
                     {this.state.data.length === 0 && !this.state.refreshing && this.props.empty}
 
                     {this.spliItems().map(item => (
-                        <DatedItemsList key={item.date} date={item.date}>
+                        <DatedItemsList key={item.date} date={item.date} showDate={this.props.showDate}>
                             {item.data.map(item => (<View key={item.id}>{this.props.parseToObject(item)}</View>))}
                         </DatedItemsList>
                     ))}
@@ -111,7 +111,7 @@ export class HistoryTable extends React.Component {
 
 const DatedItemsList = props => (
     <View>
-        <Text style={styles.date}>{props.date}</Text>
+        {props.showDate && <Text style={styles.date}>{props.date}</Text>}
         {props.children}
     </View>
 );

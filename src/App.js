@@ -21,7 +21,8 @@ export default class App extends React.Component {
     this.handlers = {
       onLogout: this.logout.bind(this),
       instanceLogout: this.loggedOut.bind(this),
-      updateUserProfile: this.updateUserProfile.bind(this)
+      updateUserProfile: this.updateUserProfile.bind(this),
+      loadNotificationsCount: this.loadNotificationsCount.bind(this)
     };
 
     this.onLogin = this.onLogin.bind(this);
@@ -95,6 +96,16 @@ export default class App extends React.Component {
         that.setState({ user })
       })
       .catch(error => Alert.alert('Ошибка загрузки профиля', error.message));
+  }
+
+  loadNotificationsCount() {
+    return RestTemplate.get('/rest/profile/notifications/count')
+      .then(data => {
+        if (data.requestInfo.isOk) {
+          DataStorage.put('notificationsCount', data.data);
+        }
+        return data;
+      });
   }
 
   render() {

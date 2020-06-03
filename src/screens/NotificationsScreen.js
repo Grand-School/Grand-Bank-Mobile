@@ -4,12 +4,12 @@ import { HistoryTable } from '../elements/HistoryTable';
 import RestTemplate from '../RestTemplate';
 import { parseToDateTime, parseErrorResponse, updateProfileAndGoBack, printMessage } from '../Utils';
 import { PinCodeModal } from '../elements/PinCodeModal';
+import DataStorage from '../DataStorage';
 
 export function NotificationsScreen() {
     let [pinCode, setPinCode] = useState(null);
     let [historyTable, setHistoryTable] = useState(null);
 
-    const getCount = () => RestTemplate.get('/rest/profile/notifications/count');
     const getPage = (page, count) => RestTemplate.get(`/rest/profile/notifications?page=${page}&count=${count}`);
     const getDate = data => new Date(Date.parse(data.date));
     const parseToObject = data => parseDataToObject(data, { pinCode, historyTable });
@@ -19,7 +19,11 @@ export function NotificationsScreen() {
         </View>
     );
 
-    const callbacks = { getCount, getPage, getDate, parseToObject, empty };
+    const callbacks = {
+        getCount: DataStorage.getByKey('handlers').loadNotificationsCount,
+        getPage, getDate, parseToObject, empty
+    };
+    
     return (
         <>
             <HistoryTable {...callbacks} count={5} showDate={false} ref={item => setHistoryTable(item)} />
@@ -77,15 +81,15 @@ function parseDataToObject(data, options) {
             <View>
                 <Text style={{ fontWeight: '600', fontSize: 16 }}>{printData.title}</Text>
                 <View>
-                    {printData.data.map(item => 
-                        typeof item === 'string' ? <Text>{item}</Text> : item
+                    {printData.data.map((item, index) => 
+                        typeof item === 'string' ? <Text key={index}>{item}</Text> : <View key={index}>{item}</View>
                     )}
                 </View>
                 <Text style={{ color: 'gray' }}>{parseToDateTime(time)}</Text>
             </View>
             <View style={{ width: '80%', flexDirection: 'row', marginTop: 5 }}>
                 {printData.buttons.map((item, index) => (
-                    <TouchableOpacity style={[{ width: '40%', borderWidth: 1, padding: 5 }, (index !== printData.buttons.length && { marginRight: 5 })]}
+                    <TouchableOpacity key={item.text} style={[{ width: '40%', borderWidth: 1, padding: 5 }, (index !== printData.buttons.length && { marginRight: 5 })]}
                         onPress={() => item.onPress(data.id, options)}>
                         <Text style={{ textAlign: 'center' }}>{item.text}</Text>
                     </TouchableOpacity>
