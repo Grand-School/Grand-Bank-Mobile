@@ -6,6 +6,8 @@ import RestTemplate from '../../RestTemplate';
 import { updateProfileAndGoBack, printMessage } from '../../Utils';
 import { InputItem as Item } from '../../elements/InputItem';
 
+const NUMBERS_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
 export class TranslatePage extends React.Component {
     constructor(props) {
         super(props);
@@ -123,17 +125,34 @@ class PriceInput extends React.Component {
     }
 
     onChangeTextHandler(price) {
-        if (price !== '' 
-            && !['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'].includes(price[price.length - 1])) {
+        let lastSymbol = price[price.length - 1];
+
+        if (price !== '' && ![...NUMBERS_ARRAY, '.', ','].includes(lastSymbol)) {
             return;
         }
 
-        if (price.includes('.') && price.substring(price.indexOf('.')).length > 3) {
+        if (!this.validPrice(price, '.') || !this.validPrice(price, ',')) {
             return;
         }
-
+        
         this.setState({ price });
         this.props.onPrice(price);
+    }
+
+    validPrice(price, symbol) {
+        let lastSymbol = price[price.length - 1];
+
+        if (price.includes(symbol)) {
+            let index = price.indexOf(symbol);
+            if (price.substring(index).length > 3) {
+                return false;
+            }
+            if (lastSymbol !== symbol && !NUMBERS_ARRAY.includes(lastSymbol)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     render() {
