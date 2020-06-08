@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
 import RestTemplate from '../../RestTemplate';
-import { parseErrorResponse, updateProfileAndGoBack } from '../../Utils';
+import { parseErrorResponse, updateProfileAndGoBack, printMessage } from '../../Utils';
 import { InputItem } from '../../elements/InputItem';
 
 export class ChangePasswordPage extends React.Component {
@@ -22,9 +22,8 @@ export class ChangePasswordPage extends React.Component {
             newPassword: this.state.newPassword,
             confirmPassword: this.state.confirmPassword
         }).then(({ data, requestInfo }) => {
-            if (!requestInfo.isOk) {
-                Alert.alert('Ошибка сохранения пароля!', parseErrorResponse(data));
-            } else {
+            printMessage(requestInfo, data, 'Вы успешно обновили пароль!');
+            if (requestInfo.isOk) {
                 updateProfileAndGoBack(that.props.navigation, false);
             }
         });

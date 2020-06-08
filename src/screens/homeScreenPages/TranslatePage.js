@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput } from 'react-native';
 import { CardInput } from '../../elements/CardInput';
 import { PinCodeModal } from '../../elements/PinCodeModal';
 import RestTemplate from '../../RestTemplate';
-import { updateProfileAndGoBack, parseErrorResponse } from '../../Utils';
+import { updateProfileAndGoBack, printMessage } from '../../Utils';
 import { InputItem as Item } from '../../elements/InputItem';
 
 export class TranslatePage extends React.Component {
@@ -27,8 +27,9 @@ export class TranslatePage extends React.Component {
 
     sendData(pinCode) {
         const that = this;
-        let additionalUrl = this.state.sendType === 'Запросить' ? '/request' : '';
-        let data = this.state.sendType === 'Запросить' ? {
+        let askMoney = this.state.sendType === 'Запросить';
+        let additionalUrl = askMoney ? '/request' : '';
+        let data = askMoney ? {
             to: this.state.card,
             message: this.state.message,
             price: this.state.price
@@ -41,10 +42,10 @@ export class TranslatePage extends React.Component {
         RestTemplate.post('/rest/profile/transaction' + additionalUrl, data)
             .then(({ data, requestInfo }) => {
                 that.setState({ askPinCode: false });
+                printMessage(requestInfo, data, `Вы успешно ${askMoney ? 'запросили' : 'перевели'} деньги!`);
+
                 if (requestInfo.isOk) {
                     updateProfileAndGoBack(that.props.navigation);
-                } else {
-                    Alert.alert('Ошибка перевода!', parseErrorResponse(data));
                 }
             });
     }

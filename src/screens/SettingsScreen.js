@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, Button, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, Button, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,6 +11,7 @@ import { userRoleAsString } from '../Utils';
 import { ChangeUsernamePage } from './settingsScreenPages/ChangeUsernamePage';
 import { ChangePasswordPage } from './settingsScreenPages/ChangePasswordPage';
 import { ChangePinCode } from './settingsScreenPages/ChangePinCodeScript';
+import { showMessage } from 'react-native-flash-message';
 
 export function SettingsScreen() {
   const Stack = createStackNavigator();
@@ -31,7 +32,11 @@ class MainPage extends React.Component {
 
   updateUserProfile() {
     DataStorage.getByKey('handlers').updateUserProfile()
-      .then(() => Alert.alert('Успех!', 'Вы успешно обновили профиль!'));
+      .then(() => showMessage({
+        message: 'Успех!',
+        description: 'Вы успешно обновили профиль',
+        type: 'success'
+      }));
   }
 
   render() {
@@ -55,7 +60,7 @@ class MainPage extends React.Component {
             <ActionsList title='Аккаунт'>
               <SettingsButton onPress={this.updateUserProfile} icon='refresh' 
                   text='Обновить профиль' colors={['#bbf0f3', '#f6d285']} firstItem={true} />
-              <SettingsButton onPress={handlers.onLogout} icon='sign-out' 
+              <SettingsButton onPress={() => handlers.onLogout(true)} icon='sign-out' 
                   text='Выйти' colors={['#ee9617', '#fe5858']} lastItem={true} />
             </ActionsList>
           </View>

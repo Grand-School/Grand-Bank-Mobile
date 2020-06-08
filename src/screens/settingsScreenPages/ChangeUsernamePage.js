@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
 import DataStorage from '../../DataStorage';
 import RestTemplate from '../../RestTemplate';
-import { parseErrorResponse } from '../../Utils';
+import { parseErrorResponse, printMessage } from '../../Utils';
 
 export class ChangeUsernamePage extends React.Component {
     constructor(props) {
@@ -18,9 +18,9 @@ export class ChangeUsernamePage extends React.Component {
             .then(({ requestInfo, data }) => {
                 if (requestInfo.isOk) {
                     DataStorage.getByKey('handlers').instanceLogout();
-                } else {
-                    Alert.alert('Ошибка!', parseErrorResponse(data));
                 }
+
+                printMessage(requestInfo, data, 'Вы успешно изменили имя пользователя!');
             });
     }
 

@@ -6,6 +6,8 @@ import { Alert, AlertButton } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestTemplate from './RestTemplate';
 import DataStorage from './DataStorage';
+import FlashMessage from "react-native-flash-message";
+import { showMessage } from 'react-native-flash-message';
 
 const AUTHENTICATION_ITEM_NAME = 'authentication';
 
@@ -29,11 +31,11 @@ export default class App extends React.Component {
     RestTemplate.setRefreshHandler(data => this.onLogin(data));
   }
 
-  logout() {
+  logout(showMessage) {
     Alert.alert('Выход', 'Вы уверены, что хотте выйти?', [
       {
         text: 'Выйти',
-        onPress: () => this.loggedOut()
+        onPress: () => this.loggedOut(showMessage)
       },
       {
         text: 'Отменить',
@@ -42,9 +44,16 @@ export default class App extends React.Component {
     ])
   }
 
-  loggedOut() {
+  loggedOut(shouldShowMessage) {
     AsyncStorage.removeItem(AUTHENTICATION_ITEM_NAME);
     this.setState({ authorization: null });
+    if (shouldShowMessage) {
+      showMessage({
+        message: 'Успех!',
+        description: 'Вы успешно вышли из аккаунта!',
+        type: 'success'
+      });
+    }
   }
 
   onLogin(authorization) {
@@ -93,9 +102,15 @@ export default class App extends React.Component {
       return <LoadingPage />
     }
 
-    return this.state.authorization && this.state.user
-        ? <MainPage authorization={this.state.authorization} user={this.state.user} 
-                    creditCardsInfo={this.state.creditCardsInfo} handlers={this.handlers} /> 
-        : <LoginPage onData={this.onLogin} />;
+    return (
+      <>
+        {this.state.authorization && this.state.user
+          ? <MainPage authorization={this.state.authorization} user={this.state.user} 
+                      creditCardsInfo={this.state.creditCardsInfo} handlers={this.handlers} /> 
+          : <LoginPage onData={this.onLogin} />}
+
+        <FlashMessage ref="myLocalFlashMessage" />
+      </>
+    );
   }
 }

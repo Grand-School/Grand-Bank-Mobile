@@ -1,8 +1,8 @@
 import { serverUrl } from '../app.json';
 import { refresh } from 'react-native-app-auth';
 import { oauth as oauthSettings } from '../app.json';
-import { Alert } from 'react-native';
 import { parseAuthorization } from './pages/LoginPage';
+import { showMessage } from 'react-native-flash-message';
 
 class RestTemplate {
     async get(url, body) {
@@ -72,7 +72,11 @@ class RestTemplate {
         refresh(oauthSettings, { refreshToken: this.authorization.refreshToken })
             .then(response => that.refreshHandler(parseAuthorization(response)))
             .catch(error => {
-                Alert.alert('Ошибка перезагрзки токена', error.message);
+                showMessage({
+                    message: 'Ошибка!',
+                    description: 'Ошибка обновления токена: ' + error.message,
+                    type: 'danger'
+                });
                 this.logoutHandler();
             });
     }

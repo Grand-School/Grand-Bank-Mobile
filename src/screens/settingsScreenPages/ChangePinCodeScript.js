@@ -1,7 +1,6 @@
 import React from 'react';
 import { PinCodeModal } from '../../elements/PinCodeModal';
-import { Alert } from 'react-native';
-import { parseErrorResponse } from '../../Utils';
+import { parseErrorResponse, printMessage } from '../../Utils';
 import RestTemplate from '../../RestTemplate';
 
 export class ChangePinCode extends React.Component {
@@ -53,9 +52,7 @@ export class ChangePinCode extends React.Component {
             .then(({ data, requestInfo }) => {
                 that.setState({ isVisible: false });
                 that.pinCodeModal.clear();
-                if (!requestInfo.isOk) {
-                    Alert.alert('Ошибка изменения пин-кода!', parseErrorResponse(data));
-                }
+                printMessage(requestInfo, data, 'Вы успешно изменили пин-код!');
             });
     }
 

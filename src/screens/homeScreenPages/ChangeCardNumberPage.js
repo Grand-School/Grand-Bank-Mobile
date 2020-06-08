@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { UserCard } from '../../elements/UserCard';
 import DataStorage from '../../DataStorage';
 import RestTemplate from '../../RestTemplate';
-import { parseErrorResponse, updateProfileAndGoBack } from '../../Utils';
+import { updateProfileAndGoBack, printMessage } from '../../Utils';
 import { PinCodeModal } from '../../elements/PinCodeModal';
 import { CardInput } from '../../elements/CardInput';
 
@@ -45,11 +45,12 @@ export class ChangeCardNumberPage extends React.Component {
             newCardNumber, pinCode
         })
             .then(({ data, requestInfo }) => {
+                that.setState({ askPinCode: false });
+                printMessage(requestInfo, data, 'Вы успешно изменили номер карты');
+
                 if (requestInfo.isOk) {
-                    that.setState({ askPinCode: false });
                     updateProfileAndGoBack(that.props.navigation);
                 }
-                // Alert.alert(requestInfo.isOk ? 'Успех!' : 'Неуспех', requestInfo.isOk ? null : parseErrorResponse(data));
             });
     }
 

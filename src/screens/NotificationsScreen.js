@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { HistoryTable } from '../elements/HistoryTable';
 import RestTemplate from '../RestTemplate';
-import { parseToDateTime, parseErrorResponse, updateProfileAndGoBack } from '../Utils';
+import { parseToDateTime, parseErrorResponse, updateProfileAndGoBack, printMessage } from '../Utils';
 import { PinCodeModal } from '../elements/PinCodeModal';
 
 export function NotificationsScreen() {
@@ -134,9 +134,7 @@ const userNotificationTableTemplate = {
                         pinCode.callback = pinCodeType => {
                             RestTemplate.post(`/rest/profile/company/order?notificationId=${notificationId}&pinCode=${pinCodeType}`)
                                 .then(({ data, requestInfo }) => {
-                                    if (!requestInfo.isOk) {
-                                        Alert.alert('Ошибка подтверждения запроса!', parseErrorResponse(data));
-                                    }
+                                    printMessage(requestInfo, data, 'Вы успешно подтвердили покупку товаров у фирмы!');
                                     pinCode.finish();
                                     historyTable.refreshData();
                                     updateProfileAndGoBack();
@@ -150,9 +148,7 @@ const userNotificationTableTemplate = {
                     onPress(notificationId, { historyTable }) {
                         RestTemplate.delete(`/rest/profile/company/order?notificationId=${notificationId}`)
                             .then(({ data, requestInfo }) => {
-                                if (!requestInfo.isOk) {
-                                    Alert.alert('Ошибка отклонения запроса!', parseErrorResponse(data));
-                                }
+                                printMessage(requestInfo, data, 'Вы успешно отклонили покупку товаров у фирмы!');
                                 historyTable.refreshData();
                             });
                     }
@@ -179,10 +175,7 @@ const userNotificationTableTemplate = {
                         pinCode.callback = pinCodeType => {
                             RestTemplate.post(`/rest/profile/company/order/cancel?notificationId=${notificationId}&pinCode=${pinCodeType}`)
                                 .then(({ requestInfo, data }) => {
-                                    if (!requestInfo.isOk) {
-                                        console.log(requestInfo);
-                                        Alert.alert('Ошибка отмены операции!', parseErrorResponse(data));
-                                    }
+                                    printMessage(requestInfo, data, 'Вы успешно подтвердили отмену покупки товаров у фирмы!');
                                     pinCode.finish();
                                     historyTable.refreshData();
                                     updateProfileAndGoBack();
@@ -196,10 +189,7 @@ const userNotificationTableTemplate = {
                     onPress(notificationId, { historyTable }) {
                         RestTemplate.delete(`/rest/profile/company/order/cancel?notificationId=${notificationId}`)
                             .then(({ requestInfo, data }) => {
-                                if (!requestInfo.isOk) {
-                                    console.log(requestInfo);
-                                    Alert.alert('Ошибка отклонения отмены операции!', parseErrorResponse(data));
-                                }
+                                printMessage(requestInfo, data, 'Вы успешно отклонили отмену покупки товаров у фирмы!');
                                 historyTable.refreshData();
                             });
                     }
@@ -221,9 +211,7 @@ const userNotificationTableTemplate = {
                     onPress(notificationId, { historyTable }) {
                         RestTemplate.post('/rest/profile/company/member/' + notificationId)
                             .then(({ requestInfo, data }) => {
-                                if (!requestInfo.isOk) {
-                                    Alert.alert('Ошибка принятия приглашения в фирму!', parseErrorResponse(data));
-                                }
+                                printMessage(requestInfo, data, 'Вы успешно приняли приглашение в фирму!');
                                 historyTable.refreshData();
                             });
                     }
@@ -233,9 +221,7 @@ const userNotificationTableTemplate = {
                     onPress(notificationId, { historyTable }) {
                         RestTemplate.delete('/rest/profile/company/member/' + notificationId)
                             .then(({ requestInfo, data }) => {
-                                if (!requestInfo.isOk) {
-                                    Alert.alert('Ошибка отклонения приглашения в фирму!', parseErrorResponse(data));
-                                }
+                                printMessage(requestInfo, data, 'Вы успешно отклонили приглашение в фирму!');
                                 historyTable.refreshData();
                             });
                     }
@@ -269,9 +255,7 @@ const userNotificationTableTemplate = {
                         pinCode.callback = typedPinCode => {
                             RestTemplate.post(`/rest/profile/transaction/confirm/${notificationId}`, typedPinCode)
                                 .then(({ data, requestInfo }) => {
-                                    if (!requestInfo.isOk) {
-                                        Alert.alert('Ошибка подтверждения запроса на перевод!', parseErrorResponse(data));
-                                    }
+                                    printMessage(requestInfo, data, 'Вы успешно подтвердили запрос на перевод денег!');
                                     pinCode.finish();
                                     historyTable.refreshData();
                                     updateProfileAndGoBack();
@@ -285,9 +269,7 @@ const userNotificationTableTemplate = {
                     onPress(notificationId, { historyTable }) {
                         RestTemplate.post(`/rest/profile/transaction/decline/${notificationId}`)
                             .then(({ data, requestInfo }) => {
-                                if (!requestInfo.isOk) {
-                                    Alert.alert('Ошибка отклонения запроса на перевод!', parseErrorResponse(data));
-                                }
+                                printMessage(requestInfo, data, 'Вы успешно отклонили запрос на перевод денег!');
                                 historyTable.refreshData();
                             });
                     }

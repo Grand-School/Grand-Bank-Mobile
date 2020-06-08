@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ImageBackground, Image, Alert } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ImageBackground, Image } from 'react-native';
 import RestTemplate from '../RestTemplate';
 import DataStorage from '../DataStorage';
 import { getUserCard, findCard } from '../Utils';
 import CustomFontProvider, { useCustomFont } from 'react-native-custom-fonts';
+import { showMessage } from 'react-native-flash-message';
 
 let userCardCounter = 0;
 
@@ -57,7 +58,11 @@ export class UserCard extends React.Component {
                 DataStorage.getByKey('cardStyles')[that.state.card.codeName] = cardSettings;
                 that.setState({ cardSettings })
             })
-            .catch(error => Alert.alert('Ошибка загрузки настройки стилей карты', error.message));
+            .catch(error => showMessage({
+                message: 'Ошибка загрузки стилей карты',
+                description: error.message,
+                type: 'danger'
+            }));
     }
 
     styles(name) {

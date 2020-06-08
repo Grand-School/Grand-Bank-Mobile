@@ -4,7 +4,7 @@ import DataStorage from '../../DataStorage';
 import { UserCard } from '../../elements/UserCard';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RestTemplate from '../../RestTemplate';
-import { parseErrorResponse, updateProfileAndGoBack, findCard } from '../../Utils';
+import { updateProfileAndGoBack, findCard, printMessage } from '../../Utils';
 import { PinCodeModal } from '../../elements/PinCodeModal';
 
 export class ChangeCardTarifPage extends React.Component {
@@ -39,9 +39,10 @@ export class ChangeCardTarifPage extends React.Component {
         const that = this;
         this.pinCodeCallback = pinCode => {
             RestTemplate.post(`/rest/profile/card/${cardType}?pinCode=${pinCode}`)
-                .then(({ requestInfo }) => {
+                .then(({ requestInfo, data }) => {
+                    that.setState({ askPinCode: false });
+                    printMessage(requestInfo, data, 'Вы успешно изменили тариф карты!');
                     if (requestInfo.isOk) {
-                        that.setState({ askPinCode: false });
                         updateProfileAndGoBack(that.props.navigation);
                     }
                 });

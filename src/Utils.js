@@ -1,4 +1,5 @@
 import DataStorage from './DataStorage';
+import { showMessage } from 'react-native-flash-message';
 
 const getUserCard = user => findCard(user.cardType);
 
@@ -44,6 +45,14 @@ function updateProfileAndGoBack(navigation, updateHistory = true) {
         .then(() => navigation && navigation.navigate('Главная'));
 }
 
+function printMessage(requestInfo, data, message) {
+    showMessage({
+        message: requestInfo.isOk ? 'Успех!' : 'Ошибка!',
+        description: requestInfo.isOk ? message : parseErrorResponse(data),
+        type: requestInfo.isOk ? 'success' : 'danger'
+    });
+}
+
 module.exports = {
-    getUserCard, parseErrorResponse, findCard, updateProfileAndGoBack, userRoleAsString, parseToDayMonth, parseToTime, parseToDateTime
+    getUserCard, parseErrorResponse, findCard, updateProfileAndGoBack, userRoleAsString, parseToDayMonth, parseToTime, parseToDateTime, printMessage
 };
