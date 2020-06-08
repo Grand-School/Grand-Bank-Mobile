@@ -5,11 +5,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export function ButtonsGroup(props) {
     return (
-        <View style={style.bittonsGroupParrent}>
-            <View style={style.buttonGroupButton}></View>
-            <View style={style.buttonsGroup}>
-                {props.children}
-            </View>
+        <View style={[style.buttonsGroup, props.style]}>
+            {props.children}
         </View>
     );
 }
@@ -21,7 +18,7 @@ export function Button(props) {
             <View style={style.buttonChildrenView}>
                 <TouchableOpacity onPress={props.onPress}>
                     <LinearGradient colors={props.colors} style={style.buttonIcon}>
-                        <IconElement name={props.icon} size={props.iconSize ? props.iconSize : 40} />
+                        <IconElement name={props.icon} size={props.iconSize ? props.iconSize : 30} />
                     </LinearGradient>
                 </TouchableOpacity>
                 <Text style={style.buttonText}>{props.title}</Text>
@@ -31,12 +28,6 @@ export function Button(props) {
 }
 
 const style = StyleSheet.create({
-    bittonsGroupParrent: {
-        backgroundColor: '#d0d9d9',
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-    },
-
     buttonsGroup: {
         padding: 15,
         paddingTop: 0,
@@ -45,20 +36,10 @@ const style = StyleSheet.create({
         justifyContent: 'center'
     },
 
-    buttonGroupButton: {
-        backgroundColor: 'white',
-        height: 5,
-        width: '40%',
-        alignSelf: 'center',
-        marginTop: 15,
-        marginBottom: 15,
-        borderRadius: 15
-    },
-
     buttonIcon: {
         padding: 5,
-        width: 60,
-        height: 60,
+        width: 45,
+        height: 45,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center'
@@ -67,9 +48,8 @@ const style = StyleSheet.create({
     buttonParrentView: {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        marginBottom: 15,
         marginRight: 15,
-        width: 100,
+        width: '20%',
         alignItems: 'center'
     },
 

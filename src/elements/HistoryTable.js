@@ -87,22 +87,26 @@ export class HistoryTable extends React.Component {
         return (
             <ScrollView style={styles.scrollView} onScroll={this.scrollHandler} scrollEventThrottle={5}
                     refreshControl={<RefreshControl onRefresh={this.refreshData} refreshing={this.state.refreshing} tintColor='black' colors={['black']} />}>
-                {this.props.title && <Text style={styles.title}>{this.props.title}</Text>}
+                {this.props.children}
 
-                <View style={{ marginBottom: 15 }}>
-                    {this.state.data.length === 0 && !this.state.refreshing && this.props.empty}
+                <View>
+                    {this.props.title && <Text style={styles.title}>{this.props.title}</Text>}
 
-                    {this.spliItems().map(item => (
-                        <DatedItemsList key={item.date} date={item.date} showDate={this.props.showDate}>
-                            {item.data.map(item => (<View key={item.id}>{this.props.parseToObject(item)}</View>))}
-                        </DatedItemsList>
-                    ))}
+                    <View style={{ marginBottom: 15 }}>
+                        {this.state.data.length === 0 && !this.state.refreshing && this.props.empty}
 
-                    {this.hasMoreData() && (
-                        <View style={{ alignItems: 'center' }}>
-                            <Spinner type='ThreeBounce' />
-                        </View>
-                    )}
+                        {this.spliItems().map(item => (
+                            <DatedItemsList key={item.date} date={item.date} showDate={this.props.showDate}>
+                                {item.data.map(item => (<View key={item.id}>{this.props.parseToObject(item)}</View>))}
+                            </DatedItemsList>
+                        ))}
+
+                        {this.hasMoreData() && (
+                            <View style={{ alignItems: 'center' }}>
+                                <Spinner type='ThreeBounce' />
+                            </View>
+                        )}
+                    </View>
                 </View>
             </ScrollView>
         );

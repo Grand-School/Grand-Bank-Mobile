@@ -33,63 +33,21 @@ export class HomeScreen extends React.Component {
 const bootstrapStyleSheet = new BootstrapStyleSheet({}, {});
 const s = bootstrapStyleSheet.create();
 
-class MainPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            modalVisible: false,
-            cardViewHeight: 0
-        };
-        this.closeModal = this.closeModal.bind(this);
-        this.openModal = this.openModal.bind(this);
-        this.cardViewLayoutHandler = this.cardViewLayoutHandler.bind(this);
-    }
-
-    closeModal() {
-        this.setState({ modalVisible: false });
-    }
-
-    openModal() {
-        this.setState({ modalVisible: true });
-    }
-
-    openScreen(screen) {
-        this.props.navigation.navigate(screen);
-        this.closeModal();
-    }
-    
-    cardViewLayoutHandler(event) {
-        let { height } = event.nativeEvent.layout;
-        this.setState({ cardViewHeight: height });
-    }
-
-    render() {
-        return (
-            <>
-                <View onLayout={this.cardViewLayoutHandler}>
-                    <View style={styles.card}>
-                        <UserCard />
-                    </View>
-                    <TouchableOpacity onPress={this.openModal} style={[s.btnTouchAble, { width: 320, alignSelf: 'center' }]}>
-                        <View style={[s.btn, s.btnInfo, {borderRadius: 15}]}>
-                            <Text style={[s.btnText, s.btnTextInfo]}>Действия</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ height: '100%', paddingBottom: this.state.cardViewHeight }}>
-                    <UserOperationsHistory />
-                </View>
-                <Modal isVisible={this.state.modalVisible} onSwipeComplete={this.closeModal} swipeDirection={['down']} style={{ justifyContent: 'flex-end', margin: 0 }}>
-                    <ButtonsGroup>
-                        <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => this.openScreen('Перевод')} />
-                        <Button title='Смена тарифа карты' icon='credit-card' colors={['#fce043', '#fb7ba2']} onPress={() => this.openScreen('Смена тарифа карты')} />
-                        <Button title='Смена номера карты' icon='numeric' colors={['#9fa4c4', '#9e768f']} onPress={() => this.openScreen('Смена номера карты')} iconElement={MaterialCommunityIcons} />
-                        <Button title='Активировать купон' icon='ticket' colors={['#cdedfd', '#ffec82', '#ffcfd2']} onPress={() => Alert.alert('translate')} />
-                    </ButtonsGroup>
-                </Modal>
-            </>
-        );
-    }
+function MainPage(props) {
+    const openScreen = screen => props.navigation.navigate(screen);
+    return (
+        <UserOperationsHistory>
+            <View style={styles.card}>
+                <UserCard />
+            </View>
+            <ButtonsGroup style={{ marginTop: 5 }}>
+                <Button title='Перевод' icon='exchange' colors={['#20bf55', '#01baef']} onPress={() => openScreen('Перевод')} />
+                <Button title='Тариф' icon='credit-card' colors={['#fce043', '#fb7ba2']} onPress={() => openScreen('Смена тарифа карты')} />
+                <Button title='Номер карты' icon='numeric' colors={['#9fa4c4', '#9e768f']} onPress={() => openScreen('Смена номера карты')} iconElement={MaterialCommunityIcons} />
+                <Button title='Купон' icon='ticket' colors={['#cdedfd', '#ffec82', '#ffcfd2']} onPress={() => Alert.alert('translate')} />
+            </ButtonsGroup>
+        </UserOperationsHistory>
+    );
 }
 
 const styles = StyleSheet.create({

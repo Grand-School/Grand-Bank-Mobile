@@ -63,7 +63,7 @@ export function UserOperationsHistory(props) {
     );
     
     const callbacks = { getCount, getPage, getDate, parseToObject, empty };
-    return <HistoryTable title='История' {...callbacks} count={15} showDate={true} ref={el => setHistoryTable(el)} />;
+    return <HistoryTable title='История' {...callbacks} count={15} showDate={true} ref={el => setHistoryTable(el)} children={props.children} />;
 }
 
 const historyTableTemplate = [
