@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-var Spinner = require('react-native-spinkit');
+import Spinner from 'react-native-spinkit';
 
 export function LoadingPage() {
     return (

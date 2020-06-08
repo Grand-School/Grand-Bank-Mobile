@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { parseToDayMonth } from '../Utils';
-var Spinner = require('react-native-spinkit');
+import Spinner from 'react-native-spinkit';
+const CURRENT_YEAR = new Date().getFullYear();
 
 export class HistoryTable extends React.Component {
     constructor(props) {
@@ -52,37 +53,50 @@ export class HistoryTable extends React.Component {
         return this.props.count * this.state.page < this.state.count;
     }
 
+    spliItems() {
+        const that = this;
+        const years = {};
+        return this.state.data.reduce((acc, item) => {
+            let date = that.props.getDate(item);
+            let dateMonth = parseToDayMonth(date);
+            let year = date.getFullYear();
+            let dateMonthYear = dateMonth + ' ' + year;
+
+            if (year in years) {
+                let yearDateMonth = years[year];
+                if (yearDateMonth === dateMonthYear) {
+                    dateMonth = dateMonthYear;
+                }
+            } else if (CURRENT_YEAR !== year) {
+                years[year] = dateMonthYear;
+                dateMonth = dateMonthYear;
+            }
+
+            let filtered = acc.filter(item => item.date === dateMonth);
+            if (filtered.length === 0) {
+                acc.push({ date: dateMonth, data: [item] });
+            } else {
+                filtered[0].data.push(item);
+            }
+            
+            return acc;
+        }, []);
+    }
+
     render() {
-        let dates = [], years = [];
         return (
             <ScrollView style={styles.scrollView} onScroll={this.scrollHandler} scrollEventThrottle={5}
                     refreshControl={<RefreshControl onRefresh={this.refreshData} refreshing={this.state.refreshing} tintColor='black' colors={['black']} />}>
                 {this.props.title && <Text style={styles.title}>{this.props.title}</Text>}
 
                 <View style={{ marginBottom: 15 }}>
-                    {this.state.data.length === 0 && this.props.empty}
-                    {this.state.data.map(item => {
-                        let date = this.props.getDate(item);
-                        let dateMonth = parseToDayMonth(date);
+                    {this.state.data.length === 0 && !this.state.refreshing && this.props.empty}
 
-                        let shouldPrintDate = !dates.includes(dateMonth) && this.props.showDate;
-                        if (shouldPrintDate) {
-                            dates.push(dateMonth);
-                        }
-
-                        let year = date.getFullYear();
-                        let shouldPrintYear = !years.includes(year) && year !== new Date().getFullYear();
-                        if (!years.includes(year)) {
-                            years.push(year);
-                        }
-
-                        return (
-                            <>
-                                {shouldPrintDate && <Text style={styles.date}>{dateMonth} {shouldPrintYear && year}</Text>}
-                                {this.props.parseToObject(item)}
-                            </>
-                        )
-                    })}
+                    {this.spliItems().map(item => (
+                        <DatedItemsList key={item.date} date={item.date}>
+                            {item.data.map(item => (<View key={item.id}>{this.props.parseToObject(item)}</View>))}
+                        </DatedItemsList>
+                    ))}
 
                     {this.hasMoreData() && (
                         <View style={{ alignItems: 'center' }}>
@@ -94,6 +108,13 @@ export class HistoryTable extends React.Component {
         );
     }
 }
+
+const DatedItemsList = props => (
+    <View>
+        <Text style={styles.date}>{props.date}</Text>
+        {props.children}
+    </View>
+);
 
 const styles = StyleSheet.create({
     scrollView: {
