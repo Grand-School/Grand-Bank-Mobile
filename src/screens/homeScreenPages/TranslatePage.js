@@ -49,6 +49,8 @@ export class TranslatePage extends React.Component {
                 if (requestInfo.isOk) {
                     updateProfileAndGoBack(that.props.navigation);
                 }
+
+                that.pinCodeModal.clear();
             });
     }
 
@@ -68,7 +70,7 @@ export class TranslatePage extends React.Component {
                 <PriceInput onPrice={price => this.setState({ price })} />
                 <MessageInput onChangeText onMessage={message => this.setState({ message })} />
                 <Button title='Отправить' disabled={!this.isDataValid()} onPress={this.send} />
-                <PinCodeModal isVisible={this.state.askPinCode} onCloseAsk={() => this.setState({ askPinCode: false })} onPinCode={this.sendData} />
+                <PinCodeModal isVisible={this.state.askPinCode} onCloseAsk={() => this.setState({ askPinCode: false })} onPinCode={this.sendData} ref={ref => this.pinCodeModal = ref} />
             </View>
         );
     }

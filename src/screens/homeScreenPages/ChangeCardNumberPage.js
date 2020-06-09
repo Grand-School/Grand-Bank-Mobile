@@ -51,6 +51,8 @@ export class ChangeCardNumberPage extends React.Component {
                 if (requestInfo.isOk) {
                     updateProfileAndGoBack(that.props.navigation);
                 }
+
+                that.pinCodeModal.clear();
             });
     }
 
@@ -75,7 +77,7 @@ export class ChangeCardNumberPage extends React.Component {
                         <Button title='Сменить номер' disabled={buttonDisabled} onPress={this.updateNumberButtonHandler} />
                     </View>
                 )}
-                <PinCodeModal isVisible={this.state.askPinCode} onPinCode={this.onPinCode} onCloseAsk={() => this.setState({ askPinCode: false })} />
+                <PinCodeModal isVisible={this.state.askPinCode} onPinCode={this.onPinCode} onCloseAsk={() => this.setState({ askPinCode: false })} ref={ref => this.pinCodeModal = ref} />
             </View>
         );
     }

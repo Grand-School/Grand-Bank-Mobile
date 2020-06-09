@@ -45,6 +45,7 @@ export class ChangeCardTarifPage extends React.Component {
                     if (requestInfo.isOk) {
                         updateProfileAndGoBack(that.props.navigation);
                     }
+                    that.pinCodeModal.clear();
                 });
         };
         this.setState({ askPinCode: true });
@@ -70,7 +71,7 @@ export class ChangeCardTarifPage extends React.Component {
                             buyAble={card.codeName !== user.cardType} onBuy={() => this.buyCard(card.codeName)} />)}
                 </View>
 
-                <PinCodeModal isVisible={this.state.askPinCode} onPinCode={this.pinCodeCallback} onCloseAsk={() => this.setState({ askPinCode: false })} />
+                <PinCodeModal isVisible={this.state.askPinCode} onPinCode={this.pinCodeCallback} onCloseAsk={() => this.setState({ askPinCode: false })} ref={ref => this.pinCodeModal = ref} />
             </ScrollView>
         );
     }    
