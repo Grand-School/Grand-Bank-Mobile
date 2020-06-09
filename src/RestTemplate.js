@@ -3,6 +3,7 @@ import { refresh } from 'react-native-app-auth';
 import { oauth as oauthSettings } from '../app.json';
 import { parseAuthorization } from './pages/LoginPage';
 import { showMessage } from 'react-native-flash-message';
+import { Platform } from 'react-native';
 
 class RestTemplate {
     async get(url, body) {
@@ -24,7 +25,9 @@ class RestTemplate {
         const settings = {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + token,
+                'Native-Application': 'Grand Bank Mobile',
+                'Native-Application-Platform': Platform.OS
             },
             method
         };
