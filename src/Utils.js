@@ -19,7 +19,9 @@ const findCard = codeName => DataStorage.getByKey('creditCardsInfo').filter(info
 
 function parseErrorResponse(data) {
     let details = '';
-    details += data.details.join(', ');
+    if (data.details) {
+        details += data.details.join(', ');
+    }
 
     let fieldsInfo = '';
     if (data.fields) {
@@ -27,8 +29,9 @@ function parseErrorResponse(data) {
             fieldsInfo += `${field} - ${data.fields[field].join(',')}\n`;
         }
     }
-    
-    return `[${data.type}] ${details}\n${fieldsInfo}`;
+    let type = data.type ? `[${data.type}] ` : '';
+
+    return `${type}${details}\n${fieldsInfo}`;
 }
 
 function parseToDayMonth(date) {
@@ -59,6 +62,10 @@ function userRoleAsString(userRole) {
     }
 }
 
+function getTypeMessage(data) {
+    return ERROR_TYPES_TRANSLATE[data.type] ? ERROR_TYPES_TRANSLATE[data.type] : 'Ошибка';
+}
+
 function updateProfileAndGoBack(navigation, updateHistory = true) {
     if (updateHistory) {
         DataStorage.getByKey('updateHistoryList')();
@@ -69,7 +76,7 @@ function updateProfileAndGoBack(navigation, updateHistory = true) {
 
 function printMessage(requestInfo, data, message) {
     showMessage({
-        message: requestInfo.isOk ? 'Успех!' : ERROR_TYPES_TRANSLATE[data.type],
+        message: requestInfo.isOk ? 'Успех!' : getTypeMessage(data),
         description: requestInfo.isOk ? message : parseErrorResponse(data),
         type: requestInfo.isOk ? 'success' : 'danger'
     });

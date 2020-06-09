@@ -1,6 +1,6 @@
 import React from 'react';
 import { PinCodeModal } from '../../elements/PinCodeModal';
-import { parseErrorResponse, printMessage } from '../../Utils';
+import { printMessage } from '../../Utils';
 import RestTemplate from '../../RestTemplate';
 
 export class ChangePinCode extends React.Component {
@@ -22,7 +22,16 @@ export class ChangePinCode extends React.Component {
     }
 
     start() {
-        this.setState({ isVisible: true, state: 0, pinCodeInputs: {} })
+        const that = this;
+        RestTemplate.get('/rest/profile/pinCode/contains')
+            .then(({ requestInfo, data }) => {
+                console.log(data);
+                if (requestInfo.isOk) {
+                    that.setState({ isVisible: true, state: data ? 0 : 1, pinCodeInputs: {} }); 
+                } else {
+                    printMessage(requestInfo, data);
+                }
+            });
     }
 
     pinCodeCallback(pinCode) {
