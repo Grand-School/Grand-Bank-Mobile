@@ -34,10 +34,26 @@ function parseErrorResponse(data) {
     return `${type}${details}\n${fieldsInfo}`;
 }
 
-function parseToDayMonth(date) {
+function parseToDayMonth(date, withWords = true) {
     const dateTimeFormat = new Intl.DateTimeFormat('ru', { month: 'short', day: '2-digit' }) 
     const [{ value: day },,{ value: month },] = dateTimeFormat.formatToParts(date);
-    return `${day} ${month}`;
+    let result = `${day} ${month}`;
+
+    if (withWords) {
+        const today = parseToDayMonth(new Date(), false);
+        if (result === today) {
+            return 'Сегодня';
+        }
+
+        const yesterdayDate = new Date();
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+        const yesterday = parseToDayMonth(yesterdayDate, false);
+        if (result === yesterday) {
+            return 'Вчера';
+        }
+    }
+
+    return result;
 }
 
 function parseToTime(date) {
