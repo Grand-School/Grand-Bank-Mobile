@@ -1,12 +1,34 @@
 import DataStorage from './DataStorage';
 import { showMessage } from 'react-native-flash-message';
 
+const ERROR_TYPES_TRANSLATE = {
+    APP_ERROR: 'Ошибка приложения',
+    DATA_NOT_FOUND: 'Не найденно',
+    DATA_ERROR: 'Ошибка данных',
+    VALIDATION_ERROR: 'Ошибка проверки данных',
+    WRONG_REQUEST: 'Неверный запрос',
+    TOO_MANY_BROWSER_NOTIFICATIONS: 'Добавленно cлишком много уведомлений браузера',
+    INCORRECT_PIN_CODE: 'Неверный пин-код',
+    PIN_CODE_UNSET: 'Пин-код не добавлен',
+    TOO_MANY_PIN_CODE_INCORRECT_TRIES: 'Ошибка пин-кода'
+};
+
 const getUserCard = user => findCard(user.cardType);
 
 const findCard = codeName => DataStorage.getByKey('creditCardsInfo').filter(info => info.codeName === codeName)[0];
 
 function parseErrorResponse(data) {
-    return data.error;
+    let details = '';
+    details += data.details.join(', ');
+
+    let fieldsInfo = '';
+    if (data.fields) {
+        for (let field in data.fields) {
+            fieldsInfo += `${field} - ${data.fields[field].join(',')}\n`;
+        }
+    }
+    
+    return `[${data.type}] ${details}\n${fieldsInfo}`;
 }
 
 function parseToDayMonth(date) {
@@ -47,7 +69,7 @@ function updateProfileAndGoBack(navigation, updateHistory = true) {
 
 function printMessage(requestInfo, data, message) {
     showMessage({
-        message: requestInfo.isOk ? 'Успех!' : 'Ошибка!',
+        message: requestInfo.isOk ? 'Успех!' : ERROR_TYPES_TRANSLATE[data.type],
         description: requestInfo.isOk ? message : parseErrorResponse(data),
         type: requestInfo.isOk ? 'success' : 'danger'
     });

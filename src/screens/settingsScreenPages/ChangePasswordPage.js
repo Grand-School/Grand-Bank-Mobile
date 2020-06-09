@@ -30,9 +30,9 @@ export class ChangePasswordPage extends React.Component {
     }
 
     saveAble() {
-        return this.state.oldPassword.length !== 0
-            && this.state.newPassword.length !== 0
-            && this.state.confirmPassword.length !== 0
+        return this.state.oldPassword.length >= 4
+            && this.state.newPassword.length >= 4
+            && this.state.confirmPassword.length >= 4
             && this.state.newPassword === this.state.confirmPassword;
     }
 
