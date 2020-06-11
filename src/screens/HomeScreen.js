@@ -9,11 +9,13 @@ import { TranslatePage } from './homeScreenPages/TranslatePage';
 import { UserOperationsHistory } from '../elements/UserOperationsHistory';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
+import subscribeToSocket from '../SocketHandlers';
 
 export class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.Stack = createStackNavigator();
+        subscribeToSocket();
     }
 
     render() {
