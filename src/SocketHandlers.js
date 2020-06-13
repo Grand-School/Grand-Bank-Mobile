@@ -10,9 +10,8 @@ export default async function subscribe() {
     let url = RestTemplate.getUrl(`/rest/websocket?access_token=${token}`);
     let socket = new SocketJS(url);
     let stompClient = Stomp.over(socket);
-    let headers = await getConnectHeaders();
 
-    stompClient.connect(headers, frame => {
+    stompClient.connect({}, frame => {
         stompClient.subscribe('/user/queue/operation', info => {
             const operation = JSON.parse(info.body);
             const settings = OperationInfo[operation.type];
@@ -65,15 +64,4 @@ export default async function subscribe() {
             });
         });
     });
-}
-
-async function getConnectHeaders() {
-    return RestTemplate.get('/rest/profile/csrf')
-        .then(({ data }) => {
-            let headers = {
-                // 'Authorization': 'Bearer ' + token,
-            };
-            headers[data.headerName] = data.token;
-            return headers;
-        });
 }
