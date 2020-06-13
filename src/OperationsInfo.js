@@ -14,7 +14,7 @@ export const OperationInfo = {
     },
 
     SALARY: {
-        title: () => 'Премия',
+        title: () => 'Зарплата',
         info: ({ price }) => `+${price} грандиков`,
         show: () => true
     },

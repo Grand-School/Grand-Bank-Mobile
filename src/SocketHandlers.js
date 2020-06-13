@@ -16,6 +16,7 @@ export default async function subscribe() {
             const operation = JSON.parse(info.body);
             const settings = OperationInfo[operation.type];
             DataStorage.getByKey('updateHistoryList')();
+            DataStorage.getByKey('handlers').updateUserProfile();
 
             if (settings === undefined) {
                 showMessage({

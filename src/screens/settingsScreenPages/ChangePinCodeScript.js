@@ -25,7 +25,6 @@ export class ChangePinCode extends React.Component {
         const that = this;
         RestTemplate.get('/rest/profile/pinCode/contains')
             .then(({ requestInfo, data }) => {
-                console.log(data);
                 if (requestInfo.isOk) {
                     that.setState({ isVisible: true, state: data ? 0 : 1, pinCodeInputs: {} }); 
                 } else {
