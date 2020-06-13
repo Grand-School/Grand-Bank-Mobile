@@ -8,82 +8,71 @@ export class HistoryTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            refreshing: true,
-            page: 0,
-            data: []
+            data: [],
+            refreshing: true
         };
-        
-        this.refreshData = this.refreshData.bind(this);
-        this.loadCountAndFirstPage = this.loadCountAndFirstPage.bind(this);
+        this.count = 0;
+        this.currentPage = 0;
+
         this.loadData = this.loadData.bind(this);
         this.scrollHandler = this.scrollHandler.bind(this);
-        
-        this.loadCountAndFirstPage();
+        this.hasMore = this.hasMore.bind(this);
+        this.refreshData = this.refreshData.bind(this);
+
+        this.loadData();
     }
 
-    loadCountAndFirstPage() {
+    loadData(page = 0) {
         const that = this;
-        this.props.getCount()
-            .then(({ data: count }) => that.setState({ count, page: 0 }, () => that.loadData(0)));
-    }
-
-    loadData(page) {
-        if (page !== 0 && !this.hasMoreData()) {
-            return;
-        }
-
-        const that = this;
-        this.setState({ page });
-        this.props.getPage(page, this.props.count)
-            .then(({ data: newData }) => that.setState({ data: [...this.state.data, ...newData], refreshing: false }));
+        const oldData = this.state.data;
+        this.props.getCount().then(({ data: count }) => {
+            that.props.getPage(page, that.props.count)
+                .then(({ data }) => {
+                    that.count = count;
+                    that.currentPage = page;
+                    that.setState({
+                        data: [...oldData, ...data],
+                        refreshing: false
+                    });
+                });
+        });
     }
 
     refreshData() {
-        this.setState({ data: [], page: 0, refreshing: true }, () => this.loadCountAndFirstPage());
+        this.count = 0;
+        this.currentPage = 0;
+        this.setState({ refreshing: true, data: [] }, () => this.loadData());
+    }
+
+    hasMore() {
+        return (this.currentPage + 1) * this.props.count < this.count;
     }
 
     scrollHandler(event) {
         let e = event.nativeEvent;
-        if (e.contentOffset.y + e.layoutMeasurement.height >= e.contentSize.height) {
-            this.loadData(++this.state.page);
+        if (e.contentOffset.y + e.layoutMeasurement.height >= e.contentSize.height
+                && this.hasMore()) {
+            this.loadData(this.currentPage + 1);
         }
     }
-
-    hasMoreData() {
-        return this.props.count * this.state.page < this.state.count;
-    }
-
-    spliItems() {
-        const that = this;
-        const years = {};
-        return this.state.data.reduce((acc, item) => {
-            let date = that.props.getDate(item);
-            let dateMonth = parseToDayMonth(date);
-            let year = date.getFullYear();
-            let dateMonthYear = dateMonth + ' ' + year;
-
-            if (year in years) {
-                let yearDateMonth = years[year];
-                if (yearDateMonth === dateMonthYear) {
-                    dateMonth = dateMonthYear;
-                }
-            } else if (CURRENT_YEAR !== year) {
-                years[year] = dateMonthYear;
-                dateMonth = dateMonthYear;
-            }
-
-            let filtered = acc.filter(item => item.date === dateMonth);
-            if (filtered.length === 0) {
-                acc.push({ date: dateMonth, data: [item] });
-            } else {
-                filtered[0].data.push(item);
-            }
-            
-            return acc;
-        }, []);
-    }
-
+    
     render() {
+        let datesList = [];
+        let data = [];
+
+        this.state.data.forEach(item => {
+            let time = this.props.getDate(item);
+
+            let date = parseToDayMonth(time);
+            if (!datesList.includes(date)) {
+                datesList.push(date);
+                data.push({ date, data: [item] });
+            } else {
+                data.filter(item => item.date === date)[0]
+                    .data.push(item);
+            }
+        });
+
         return (
             <ScrollView style={styles.scrollView} onScroll={this.scrollHandler} scrollEventThrottle={5}
                     refreshControl={<RefreshControl onRefresh={this.refreshData} refreshing={this.state.refreshing} tintColor='black' colors={['black']} />}>
@@ -95,13 +84,13 @@ export class HistoryTable extends React.Component {
                     <View style={{ marginBottom: 15 }}>
                         {this.state.data.length === 0 && !this.state.refreshing && this.props.empty}
 
-                        {this.spliItems().map(item => (
+                        {data.map(item => (
                             <DatedItemsList key={item.date} date={item.date} showDate={this.props.showDate}>
                                 {item.data.map(item => (<View key={item.id}>{this.props.parseToObject(item)}</View>))}
                             </DatedItemsList>
                         ))}
 
-                        {this.hasMoreData() && (
+                        {this.hasMore() && (
                             <View style={{ alignItems: 'center' }}>
                                 <Spinner type='ThreeBounce' />
                             </View>
