@@ -2,9 +2,8 @@ import SocketJS from 'sockjs-client';
 import Stomp from 'stomp-websocket';
 import RestTemplate from './RestTemplate';
 import { showMessage } from 'react-native-flash-message';
-import { OperationInfo } from './OperationsInfo';
+import { OperationInfo, NotificationsInfo } from './OperationsInfo';
 import DataStorage from './DataStorage';
-import { set } from 'react-native-reanimated';
 
 export default async function subscribe() {
     let token = await RestTemplate.getToken();
@@ -14,7 +13,6 @@ export default async function subscribe() {
     let headers = await getConnectHeaders();
 
     stompClient.connect(headers, frame => {
-        console.log(OperationInfo)
         stompClient.subscribe('/user/queue/operation', info => {
             const operation = JSON.parse(info.body);
             const settings = OperationInfo[operation.type];
@@ -36,6 +34,33 @@ export default async function subscribe() {
             showMessage({
                 message: settings.title(operation),
                 description: settings.info(operation),
+                type: 'info'
+            });
+        });
+
+        stompClient.subscribe('/user/queue/notifications', info => {
+            const notification = JSON.parse(info.body);
+            const settings = NotificationsInfo[notification.type];
+
+            const lostNotificationsListCallback = DataStorage.getByKey('updateNotificationsList');
+            if (!lostNotificationsListCallback) {
+                DataStorage.getByKey('handlers').loadNotificationsCount();
+            } else {
+                lostNotificationsListCallback();
+            }
+
+            if (settings === undefined) {
+                showMessage({
+                    message: 'Ошибка',
+                    description: 'Вам пришло неизвестное уведомление. Обновите приложение, что бы увидеть эту операцию!',
+                    type: 'danger'
+                });
+                return;
+            }
+
+            showMessage({
+                message: settings.title(notification),
+                description: settings.info(notification),
                 type: 'info'
             });
         });

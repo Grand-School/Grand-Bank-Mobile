@@ -10,6 +10,7 @@ export function NotificationsScreen() {
     let [pinCode, setPinCode] = useState(null);
     let [historyTable, setHistoryTable] = useState(null);
 
+    DataStorage.put('updateNotificationsList', () => historyTable.refreshData());
     const getPage = (page, count) => RestTemplate.get(`/rest/profile/notifications?page=${page}&count=${count}`);
     const getDate = data => new Date(Date.parse(data.date));
     const parseToObject = data => parseDataToObject(data, { pinCode, historyTable });

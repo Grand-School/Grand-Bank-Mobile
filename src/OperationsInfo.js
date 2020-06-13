@@ -52,6 +52,28 @@ export const OperationInfo = {
     ...ignoreOperations('COUPON', 'CARD_UPDATE', 'UPDATE_CARD_NUMBER', 'BUY_LICENSE', 'COMPANY_OPERATION')
 };
 
+export const NotificationsInfo = {
+    COMPANY_OPERATION: {
+        title: () => 'Новая операция',
+        info: ({ companyOperation: { company } }) => `Вам пришла новая операция от фирмы "${company.name}".\nПодтвердите её на странице уведомлений.`
+    },
+    
+    COMPANY_OPERATION_CANCEL: {
+        title: () => 'Запрос на отмену операции',
+        info: ({ cancelCompanyOperation: { companyOperation: { company } } }) => `Вам пришёл запрос на отмену операции от фирмы "${company.name}".\nПодтвердите его на странице уведомлений.`
+    },
+    
+    COMPANY_MEMBER: {
+        title: () => 'Приглашение в фирму',
+        info: ({ companyMember: { company } }) => `Вам пришло приглащение в фирму "${company.name}".\nПодтвердите его на странице уведомлений.`
+    },
+    
+    TRANSLATE_REQUEST: {
+        title: () => 'Запрос на перевод',
+        info: ({ translateRequest: { author, price } }) => `Вам пришёл запрос на перевод денег от пользователя ${author.name} ${author.surname} за ${price} грандиков.\nПодтвердите его на странице уведомлений.`
+    }
+};
+
 function ignoreOperations() {
     let result = {};
     [...arguments].forEach(item => {
