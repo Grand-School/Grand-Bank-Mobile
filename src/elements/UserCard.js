@@ -110,7 +110,7 @@ export class UserCard extends React.Component {
     }
 
     getBackgroundUrl() {
-        let cardImageIndex = DataStorage.getByKey('user').cardImage;
+        let cardImageIndex = this.props.image === undefined ?  DataStorage.getByKey('user').cardImage : this.props.image;
         let { cardSettings } = this.state;
         let cardImageSettigs = cardSettings.images[cardImageIndex] || cardSettings.images[0];
         let cardImageUrl = cardImageSettigs.frontImage;

@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, Button, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, Button, Alert, TouchableOpacity } from 'react-native';
 import DataStorage from '../../DataStorage';
 import { UserCard } from '../../elements/UserCard';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -22,23 +22,23 @@ export class ChangeCardTarifPage extends React.Component {
         DataStorage.onDataChange('user', this.updateUser);
     }
 
-    buyCard(cardType) {
+    buyCard(cardType, image) {
         let newCard = findCard(cardType);
         let oldCard = findCard(this.state.user.cardType);
         if (newCard.price <= oldCard.price) {
             Alert.alert('Вы уверены?', 'Вы уверены, что хотите купить карту, со стоимостью меньшей предыдущей?', [
                 { text: 'Нет', style: 'cancel' },
-                { text: 'Да', onPress: () => this.proccessBuy(cardType) }
+                { text: 'Да', onPress: () => this.proccessBuy(cardType, image) }
             ]);
         } else {
-            this.proccessBuy(cardType);
+            this.proccessBuy(cardType, image);
         }
     }
 
-    proccessBuy(cardType) {
+    proccessBuy(cardType, image) {
         const that = this;
         this.pinCodeCallback = pinCode => {
-            RestTemplate.post(`/rest/profile/card/${cardType}?pinCode=${pinCode}`)
+            RestTemplate.post(`/rest/profile/card/${cardType}?pinCode=${pinCode}&image=${image}`)
                 .then(({ requestInfo, data }) => {
                     that.setState({ askPinCode: false });
                     printMessage(requestInfo, data, 'Вы успешно изменили тариф карты!');
@@ -68,7 +68,7 @@ export class ChangeCardTarifPage extends React.Component {
             <ScrollView style={{ padding: 15 }}>
                 <View style={{ alignItems: 'center', paddingBottom: 15 }}>
                     {creditCards.map(card => <CardInfo key={card.codeName} card={card} 
-                            buyAble={card.codeName !== user.cardType} onBuy={() => this.buyCard(card.codeName)} />)}
+                            buyAble={card.codeName !== user.cardType} onBuy={(image) => this.buyCard(card.codeName, image)} />)}
                 </View>
 
                 <PinCodeModal isVisible={this.state.askPinCode} onPinCode={this.pinCodeCallback} onCloseAsk={() => this.setState({ askPinCode: false })} ref={ref => this.pinCodeModal = ref} />
@@ -78,11 +78,37 @@ export class ChangeCardTarifPage extends React.Component {
 }
 
 const CardInfo = props => {
+    const [images, setImages] = useState(null);
+    const [page, setPage] = useState(0);
+    useEffect(() => {
+        if (images !== null) {
+            return;
+        }
+        fetch(RestTemplate.getUrl(props.card.style))
+            .then(response => response.json())
+            .then(style => setImages(style.images));
+    });
+
     return (
         <View style={[style.creditCardInfo, { marginBottom: 15 }]}>
             <View style={style.creditCardView}>
-                <UserCard cardTarif={props.card.codeName} />
+                <UserCard cardTarif={props.card.codeName} image={page} />
             </View>
+
+            {images !== null && images.length > 1 && (
+                <View style={{ flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => { if (page !== 0) setPage(page - 1) }}>
+                        <Icon name='caret-left' size={50} color='#3498DB' />
+                    </TouchableOpacity>
+
+                    <Text style={{ fontWeight: '600', fontSize: 40, marginLeft: 15, marginRight: 15 }}>{page + 1}</Text>
+
+                    <TouchableOpacity onPress={() => { if (page + 1 < images.length) setPage(page + 1) }}>
+                        <Icon name='caret-right' size={50} color='#3498DB' />
+                    </TouchableOpacity>
+                </View>
+            )}
+
             <Text style={style.cardTitle}>{props.card.name}</Text>
             <View style={style.cardInfo}>
                 <ListItem>Налог на премию: <Text style={style.bold}>{props.card.tax.awards}%</Text></ListItem>
@@ -103,7 +129,7 @@ const CardInfo = props => {
                     </View>
                 </View>
             )}
-            <Button title='Купить' disabled={!props.buyAble} onPress={props.onBuy} />
+            <Button title='Купить' disabled={!props.buyAble} onPress={() => props.onBuy(page)} />
         </View>
     );
 }
