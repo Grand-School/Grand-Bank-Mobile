@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text, View, Button, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,7 +19,7 @@ export function SettingsScreen() {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator>
-      <Stack.Screen name='Главная' component={MainPage} />
+      <Stack.Screen name='Настройки' component={MainPage} />
       <Stack.Screen name='Изменить логин' component={ChangeUsernamePage} />
       <Stack.Screen name='Изменить фон карты' component={ChangeCardBackgroundPage} />
       <Stack.Screen name='Изменить пароль' component={ChangePasswordPage} />
