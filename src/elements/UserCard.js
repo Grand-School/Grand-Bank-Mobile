@@ -109,6 +109,14 @@ export class UserCard extends React.Component {
         });
     }
 
+    getBackgroundUrl() {
+        let cardImageIndex = DataStorage.getByKey('user').cardImage;
+        let { cardSettings } = this.state;
+        let cardImageSettigs = cardSettings.images[cardImageIndex] || cardSettings.images[0];
+        let cardImageUrl = cardImageSettigs.frontImage;
+        return RestTemplate.getUrl(cardImageUrl);
+    }
+
     render() {
         if (!this.state.cardSettings) {
             return (
@@ -131,7 +139,7 @@ export class UserCard extends React.Component {
 
         return (
             <ImageBackground style={[ccs.creditCard, this.styles('credit_card')]} imageStyle={ccs.backgroundImage}
-                    source={{uri: RestTemplate.getUrl(this.state.cardSettings.frontImage)}}>
+                    source={{uri: this.getBackgroundUrl()}}>
                 <CustomFontProvider fontFaces={this.getFontFaces()} onDownloadDidEnd={this.fontDownloadingEnd}>
                     <CardTextComponent fontName={fontsMap['card_type']} style={[ccs.cardTitle, this.styles('card_type')]}>{this.state.card.name}</CardTextComponent>
                     <Image style={[ccs.cardLogo, this.styles('card_logo')]} source={require('../../img/grand.png')} resizeMode='contain' />
