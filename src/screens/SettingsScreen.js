@@ -5,12 +5,14 @@ import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient';
 import DataStorage from '../DataStorage';
 import { userRoleAsString } from '../Utils';
 import { ChangeUsernamePage } from './settingsScreenPages/ChangeUsernamePage';
 import { ChangePasswordPage } from './settingsScreenPages/ChangePasswordPage';
 import { ChangePinCode } from './settingsScreenPages/ChangePinCodeScript';
+import ChangeCardBackgroundPage from './settingsScreenPages/ChangeCardBackgroundPage';
 import { showMessage } from 'react-native-flash-message';
 
 export function SettingsScreen() {
@@ -19,6 +21,7 @@ export function SettingsScreen() {
     <Stack.Navigator>
       <Stack.Screen name='Главная' component={MainPage} />
       <Stack.Screen name='Изменить логин' component={ChangeUsernamePage} />
+      <Stack.Screen name='Изменить фон карты' component={ChangeCardBackgroundPage} />
       <Stack.Screen name='Изменить пароль' component={ChangePasswordPage} />
     </Stack.Navigator>
   );
@@ -51,6 +54,8 @@ class MainPage extends React.Component {
             <ActionsList title='Профиль'>
               <SettingsButton onPress={() => this.props.navigation.navigate('Изменить логин')} icon='user' iconElement={AntDesignIcon} 
                   text='Изменить логин' colors={['#aff6cf', '#9f98e8']} firstItem={true} />
+              <SettingsButton onPress={() => this.props.navigation.navigate('Изменить фон карты')} icon='image' iconElement={FontAwesome} 
+                  text='Изменить фон карты' colors={['#aff6cf', '#9f98e8']} />
               <SettingsButton onPress={() => this.props.navigation.navigate('Изменить пароль')} icon='key' iconElement={AntDesignIcon} 
                   text='Изменить пароль' colors={['#b1ade2', '#7ddff8']} />
               <SettingsButton onPress={() => this.changePinCode.start()} icon='numeric' iconElement={MaterialCommunityIcons} 
