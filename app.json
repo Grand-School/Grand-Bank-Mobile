@@ -3,10 +3,10 @@
   "displayName": "Grand Bank Mobile",
   "serverUrl": "http://localhost:8080",
   "oauth": {
-    "clientId": "37RQ3RXI4HWLCWBE",
-    "clientSecret": "eaf6d964-d65a-4f15-a972-add06e80575b",
+    "clientId": "WQNRZOJCPAM4UE5W",
+    "clientSecret": "d0af8947-417b-44cd-9c87-d596cebb92cc",
     "redirectUrl": "com.ua.grandschool.mobile://login/callback",
-    "scopes": ["user_info", "pages:profile"],
+    "scopes": ["user_info", "pages:profile", "user:authorize"],
     "serviceConfiguration": {
       "authorizationEndpoint": "http://localhost:8080/oauth/authorize",
       "tokenEndpoint": "http://localhost:8080/oauth/token"

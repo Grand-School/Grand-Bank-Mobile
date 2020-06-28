@@ -6,12 +6,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { HomeScreen } from './../screens/HomeScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { SettingsScreen } from './../screens/SettingsScreen';
+import { CameraScreen } from '../screens/CameraScreen';
 import DataStorage from './../DataStorage';
 import { withBadge } from 'react-native-elements';
+import { GrandMAuth, setInstance as setGrandMAuthInstance } from '../elements/GrandMAuth'
 
 const navigatioSettings = [
   { name: 'Главная', component: HomeScreen, icon: 'ios-home' },
   { name: 'Уведомления', component: NotificationsScreen, icon: 'ios-notifications', notifications: 'notificationsCount' },
+  { name: 'Камера', component: CameraScreen, icon: 'ios-camera' },
   { name: 'Настройки', component: SettingsScreen, icon: 'ios-settings' }
 ];
 
@@ -97,6 +100,8 @@ export class MainPage extends React.Component {
             <Tab.Screen name={item.name} component={item.component} key={item.name} />
           ))}
         </Tab.Navigator>
+
+        <GrandMAuth ref={instance => setGrandMAuthInstance(instance)} />
       </NavigationContainer>
     );
   }
